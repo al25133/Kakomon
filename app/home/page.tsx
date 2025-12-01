@@ -106,7 +106,7 @@ export default function HomePage() {
             </CardHeader>
             <CardContent>
               <Button asChild className="w-full" size="lg" variant="outline">
-                <Link href="/create-from-existing">類題作成へ</Link>
+                <Link href="ページを作ってに置く">類題作成へ</Link>
               </Button>
             </CardContent>
           </Card>
