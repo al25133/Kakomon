@@ -40,12 +40,8 @@ export default async function ErrorPage({
             )}
           </p>
           
-          <Button
-            asChild
-            className="w-full max-w-xs shadcn-button" // カスタムクラスを削除
-            size="default" // h-14
-          >
-            <Link href="/auth/login">ログイン画面へ戻る</Link>
+          <Button className="w-full max-w-xs" size="default" href="/auth/login">
+            ログイン画面へ戻る
           </Button>
         </div>
       </main>

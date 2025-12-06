@@ -100,24 +100,15 @@ export default function SharePage() {
       {/* PDFの青いヘッダー (戻るボタン付き) */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            asChild={step === 1} // ステップ1ならホームへ
-            onClick={step === 2 ? () => setStep(1) : undefined} // ステップ2ならステップ1へ
+          <Button
+            variant="ghost"
+            size="icon"
+            href={step === 1 ? "/home" : undefined}
+            onClick={step === 2 ? () => setStep(1) : undefined}
             className="hover:bg-primary/80"
           >
-            {step === 1 ? (
-              <Link href="/home">
-                <ChevronLeft className="h-6 w-6" />
-                <span className="sr-only">戻る</span>
-              </Link>
-            ) : (
-              <>
-                <ChevronLeft className="h-6 w-6" />
-                <span className="sr-only">戻る</span>
-              </>
-            )}
+            <ChevronLeft className="h-6 w-6" />
+            <span className="sr-only">戻る</span>
           </Button>
           <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
             過去問共有
@@ -135,7 +126,7 @@ export default function SharePage() {
               <div className="grid gap-2">
                 <Label htmlFor="faculty" className="text-base font-semibold">学部・専攻</Label>
                 <Select value={selectedFaculty} onValueChange={setSelectedFaculty}>
-                  <SelectTrigger id="faculty" className="h-12 rounded-2xl shadcn-select-trigger">
+                  <SelectTrigger id="faculty" className="h-14 rounded-lg shadcn-select-trigger">
                     <SelectValue placeholder="学部を選択" />
                   </SelectTrigger>
                   <SelectContent>
@@ -151,7 +142,7 @@ export default function SharePage() {
               <div className="grid gap-2">
                 <Label htmlFor="department" className="text-base font-semibold">学科・コース</Label>
                 <Select value={selectedDepartment} onValueChange={setSelectedDepartment} disabled={!selectedFaculty}>
-                  <SelectTrigger id="department" className="h-12 rounded-2xl shadcn-select-trigger">
+                  <SelectTrigger id="department" className="h-14 rounded-lg shadcn-select-trigger">
                     <SelectValue placeholder="学科を選択" />
                   </SelectTrigger>
                   <SelectContent>
@@ -167,7 +158,7 @@ export default function SharePage() {
               <div className="grid gap-2">
                 <Label htmlFor="subject" className="text-base font-semibold">科目</Label>
                 <Select value={selectedSubject} onValueChange={setSelectedSubject} disabled={!selectedDepartment}>
-                  <SelectTrigger id="subject" className="h-12 rounded-2xl shadcn-select-trigger">
+                  <SelectTrigger id="subject" className="h-14 rounded-lg shadcn-select-trigger">
                     <SelectValue placeholder="科目を選択" />
                   </SelectTrigger>
                   <SelectContent>
@@ -183,7 +174,7 @@ export default function SharePage() {
               <div className="grid gap-2">
                 <Label htmlFor="professor" className="text-base font-semibold">教授</Label>
                 <Select value={selectedProfessor} onValueChange={setSelectedProfessor} disabled={!selectedSubject}>
-                  <SelectTrigger id="professor" className="h-12 rounded-2xl shadcn-select-trigger">
+                  <SelectTrigger id="professor" className="h-14 rounded-lg shadcn-select-trigger">
                     <SelectValue placeholder="教授を選択" />
                   </SelectTrigger>
                   <SelectContent>
@@ -199,7 +190,8 @@ export default function SharePage() {
 
             <Button 
               onClick={handleNextStep}
-              className="w-full max-w-xs mx-auto flex shadcn-button"
+              className="w-full max-w-xs mx-auto flex"
+              size="default"
             >
               次へ
             </Button>
@@ -219,13 +211,13 @@ export default function SharePage() {
                <div className="grid gap-2">
                 <Label htmlFor="title" className="text-base font-semibold">タイトル</Label>
                 <Input
-                  id="title"
-                  placeholder="例: 2023年度 期末試験"
-                  required
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="h-12 rounded-2xl"
-                />
+                      id="title"
+                      placeholder="例: 2023年度 期末試験"
+                      required
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="h-14 rounded-lg"
+                    />
               </div>
 
               <div className="grid gap-2">
@@ -244,7 +236,8 @@ export default function SharePage() {
 
             <Button 
               type="submit"
-              className="w-full max-w-xs mx-auto flex shadcn-button"
+              className="w-full max-w-xs mx-auto flex"
+              size="default"
               disabled={isLoading}
             >
               {isLoading ? "アップロード中..." : "アップロードする"}

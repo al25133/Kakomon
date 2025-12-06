@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
+ 
 import { ChevronLeft } from "lucide-react"
 import { getMockSubjects, getMockDepartmentById } from "@/lib/mock-data"
 import { redirect } from "next/navigation"
@@ -25,11 +25,9 @@ export default async function SubjectsPage({
       {/* PDFの青いヘッダー */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" asChild className="hover:bg-primary/80">
-            <Link href={`/study/departments?faculty=${department?.faculty_id}`}>
-              <ChevronLeft className="h-6 w-6" />
-              <span className="sr-only">戻る</span>
-            </Link>
+          <Button variant="ghost" size="icon" href={`/study/departments?faculty=${department?.faculty_id}`} className="hover:bg-primary/80">
+            <ChevronLeft className="h-6 w-6" />
+            <span className="sr-only">戻る</span>
           </Button>
           <div className="text-center absolute left-1/2 -translate-x-1/2">
             <h1 className="text-xl font-bold">
@@ -52,14 +50,12 @@ export default async function SubjectsPage({
             {subjects.map((subject) => (
               <Button
                 key={subject.id}
-                asChild
                 variant="secondary" // PDFのグレーボタン (#E0E0E0)
                 className="w-full justify-start"
                 size="default" // h-14
+                href={`/study/professors?subject=${subject.id}`}
               >
-                <Link href={`/study/professors?subject=${subject.id}`}>
-                  {subject.name}
-                </Link>
+                {subject.name}
               </Button>
             ))}
           </div>

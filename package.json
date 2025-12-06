@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
+    "export": "next export",
     "dev": "next dev",
     "lint": "eslint .",
     "start": "next start"

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
+ 
 import { ChevronLeft } from "lucide-react"
 import { getMockProfessorById, getMockSubjectById, getMockDepartmentById } from "@/lib/mock-data"
 import { redirect } from "next/navigation"
@@ -26,11 +26,9 @@ export default async function ProfessorDetailPage({
       {/* PDFの青いヘッダー */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" asChild className="hover:bg-primary/80">
-            <Link href={`/study/professors?subject=${professor.subject_id}`}>
-              <ChevronLeft className="h-6 w-6" />
-              <span className="sr-only">戻る</span>
-            </Link>
+          <Button variant="ghost" size="icon" href={`/study/professors?subject=${professor.subject_id}`} className="hover:bg-primary/80">
+            <ChevronLeft className="h-6 w-6" />
+            <span className="sr-only">戻る</span>
           </Button>
           <div className="text-center absolute left-1/2 -translate-x-1/2">
             <h1 className="text-xl font-bold">
@@ -48,31 +46,31 @@ export default async function ProfessorDetailPage({
           
           {/* 閲覧ボタン (PDFのプライマリボタン) */}
           <Button
-            asChild
             className="w-full"
             size="default" // h-14
+            href={`/exams/view?professor=${id}`}
           >
-            <Link href={`/exams/view?professor=${id}`}>過去問を閲覧</Link>
+            過去問を閲覧
           </Button>
 
           {/* 類題作成ボタン (PDFのセカンダリボタン) */}
           <Button
-            asChild
             className="w-full bg-muted text-muted-foreground hover:bg-muted/90"
             size="default" // h-14
             variant="secondary"
+            href={`/exams/generate?professor=${id}`}
           >
-            <Link href={`/exams/generate?professor=${id}`}>類題を作成</Link>
+            類題を作成
           </Button>
 
           {/* 質問するボタン (PDFのセカンダリボタン) */}
           <Button
-            asChild
             className="w-full bg-muted text-muted-foreground hover:bg-muted/90"
             size="default" // h-14
             variant="secondary"
+            href={`/questions/create?professor=${id}`}
           >
-            <Link href={`/questions/create?professor=${id}`}>質問する</Link>
+            質問する
           </Button>
         </div>
       </main>

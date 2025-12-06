@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Label } from "@/components/ui/label"
-import Link from "next/link"
+ 
 import { useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
 import { ChevronLeft, Sparkles, AlertCircle } from "lucide-react"
@@ -83,11 +83,9 @@ export default function GenerateExamPage() {
       <div className="flex flex-col min-h-svh bg-background">
          <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
           <div className="container mx-auto flex h-16 items-center justify-between px-4">
-            <Button variant="ghost" size="icon" asChild className="hover:bg-primary/80">
-              <Link href="/home">
-                <ChevronLeft className="h-6 w-6" />
-                <span className="sr-only">戻る</span>
-              </Link>
+            <Button variant="ghost" size="icon" href="/home" className="hover:bg-primary/80">
+              <ChevronLeft className="h-6 w-6" />
+              <span className="sr-only">戻る</span>
             </Button>
             <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
               エラー
@@ -108,24 +106,15 @@ export default function GenerateExamPage() {
       {/* PDFの青いヘッダー */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            asChild={step === 1}
+          <Button
+            variant="ghost"
+            size="icon"
+            href={step === 1 ? `/study/professor/${professorId}` : undefined}
             onClick={step > 1 ? () => setStep(step - 1) : undefined}
             className="hover:bg-primary/80"
           >
-            {step === 1 ? (
-              <Link href={`/study/professor/${professorId}`}>
-                <ChevronLeft className="h-6 w-6" />
-                <span className="sr-only">戻る</span>
-              </Link>
-            ) : (
-              <>
-                <ChevronLeft className="h-6 w-6" />
-                <span className="sr-only">戻る</span>
-              </>
-            )}
+            <ChevronLeft className="h-6 w-6" />
+            <span className="sr-only">戻る</span>
           </Button>
           <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
             類題作成
@@ -143,8 +132,8 @@ export default function GenerateExamPage() {
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
                 AI機能を使用するには、設定画面でAPIキーを登録してください。
-                <Button asChild variant="link" className="px-2">
-                  <Link href="/settings">設定画面へ</Link>
+                <Button variant="link" className="px-2" href="/settings">
+                  設定画面へ
                 </Button>
               </AlertDescription>
             </Alert>
@@ -162,7 +151,7 @@ export default function GenerateExamPage() {
               <div className="grid gap-2">
                 <Label htmlFor="exam" className="text-base font-semibold">過去問</Label>
                 <Select value={selectedExam} onValueChange={setSelectedExam} disabled={!hasApiKey}>
-                  <SelectTrigger id="exam" className="h-12 rounded-2xl" size="lg">
+                  <SelectTrigger id="exam" className="h-14 rounded-lg" size="lg">
                     <SelectValue placeholder="過去問を選択" />
                   </SelectTrigger>
                   <SelectContent>

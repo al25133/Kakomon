@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
+ 
 import { ChevronLeft, Plus } from "lucide-react"
 import { getMockProfessorById, getMockExams, getMockSubjectById } from "@/lib/mock-data"
 import { redirect } from "next/navigation"
@@ -26,11 +26,9 @@ export default async function ViewExamsPage({
       {/* PDFの青いヘッダー */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" asChild className="hover:bg-primary/80">
-            <Link href={`/study/professor/${params.professor}`}>
-              <ChevronLeft className="h-6 w-6" />
-              <span className="sr-only">戻る</span>
-            </Link>
+          <Button variant="ghost" size="icon" href={`/study/professor/${params.professor}`} className="hover:bg-primary/80">
+            <ChevronLeft className="h-6 w-6" />
+            <span className="sr-only">戻る</span>
           </Button>
           <div className="text-center absolute left-1/2 -translate-x-1/2">
             <h1 className="text-xl font-bold">
@@ -39,11 +37,9 @@ export default async function ViewExamsPage({
             <p className="text-sm opacity-90">{professor?.name}</p>
           </div>
           {/* PDF 5枚目のデザインにはないが、機能として「過去問追加」があってもよいため、共有へのリンクを残す */}
-          <Button variant="ghost" size="icon" asChild className="hover:bg-primary/80">
-            <Link href={`/share`}>
-              <Plus className="h-6 w-6" />
-              <span className="sr-only">過去問を共有</span>
-            </Link>
+          <Button variant="ghost" size="icon" href="/share" className="hover:bg-primary/80">
+            <Plus className="h-6 w-6" />
+            <span className="sr-only">過去問を共有</span>
           </Button>
         </div>
       </header>
@@ -61,14 +57,12 @@ export default async function ViewExamsPage({
               exams.map((exam) => (
                 <Button
                   key={exam.id}
-                  asChild
                   variant="secondary" // PDFのグレーボタン (#E0E0E0)
                   className="w-full justify-start"
                   size="default" // h-14
+                  href={`/exams/${exam.id}`}
                 >
-                  <Link href={`/exams/${exam.id}`}>
-                    {exam.title} {exam.year && `(${exam.year}年)`}
-                  </Link>
+                  {exam.title} {exam.year && `(${exam.year}年)`}
                 </Button>
               ))
             ) : (
@@ -80,11 +74,11 @@ export default async function ViewExamsPage({
           
           {/* PDF 5枚目の「類題作成」ボタン */}
           <Button
-            asChild
             className="w-full max-w-xs mx-auto flex"
             size="default"
+            href={`/exams/generate?professor=${params.professor}`}
           >
-            <Link href={`/exams/generate?professor=${params.professor}`}>類題作成</Link>
+            類題作成
           </Button>
 
         </div>

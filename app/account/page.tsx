@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import Link from "next/link"
+ 
 import { ChevronLeft, User, Mail, Calendar, Settings, LogOut } from "lucide-react"
 import { mockUser, mockExams, mockQuestions } from "@/lib/mock-data"
 
@@ -15,11 +15,9 @@ export default function AccountPage() {
       {/* PDFの青いヘッダー */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" asChild className="hover:bg-primary/80">
-            <Link href="/home">
-              <ChevronLeft className="h-6 w-6" />
-              <span className="sr-only">戻る</span>
-            </Link>
+          <Button variant="ghost" size="icon" href="/home" className="hover:bg-primary/80">
+            <ChevronLeft className="h-6 w-6" />
+            <span className="sr-only">戻る</span>
           </Button>
           <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
             アカウント
@@ -68,12 +66,14 @@ export default function AccountPage() {
 
           {/* メニュー */}
           <div className="space-y-4">
-            <Button asChild variant="secondary" className="w-full justify-start h-14 rounded-2xl text-base" size="lg">
-              <Link href="/settings">
+            <Button variant="secondary" className="w-full justify-start h-14 rounded-2xl text-base" size="lg" href="/settings">
+              <Settings className="h-5 w-5 mr-3" />
+              設定
+            </Button>
+              <Button variant="secondary" className="w-full justify-start" size="default" href="/settings">
                 <Settings className="h-5 w-5 mr-3" />
                 設定
-              </Link>
-            </Button>
+              </Button>
             
             {/* デモ用のダミーログアウトフォーム */}
             <form action="/api/auth/logout" method="post">
@@ -85,6 +85,14 @@ export default function AccountPage() {
                 <LogOut className="h-5 w-5 mr-3" />
                 ログアウト
               </Button>
+                <Button 
+                  type="submit"
+                  variant="secondary" 
+                  className="w-full justify-start text-destructive hover:text-destructive" 
+                  size="default">
+                  <LogOut className="h-5 w-5 mr-3" />
+                  ログアウト
+                </Button>
             </form>
           </div>
           

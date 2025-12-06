@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import Link from "next/link"
 import { useState, useEffect } from "react"
 import { ChevronLeft, Key, AlertCircle, CheckCircle } from "lucide-react"
 import { mockUser } from "@/lib/mock-data"
@@ -49,11 +48,9 @@ export default function SettingsPage() {
       {/* PDFの青いヘッダー */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" asChild className="hover:bg-primary/80">
-            <Link href="/account">
-              <ChevronLeft className="h-6 w-6" />
-              <span className="sr-only">戻る</span>
-            </Link>
+          <Button variant="ghost" size="icon" href="/account" className="hover:bg-primary/80">
+            <ChevronLeft className="h-6 w-6" />
+            <span className="sr-only">戻る</span>
           </Button>
           <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
             設定
@@ -91,7 +88,7 @@ export default function SettingsPage() {
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   disabled
-                  className="h-12 rounded-2xl bg-muted"
+                  className="h-14 rounded-lg bg-muted"
                 />
                 <p className="text-sm text-muted-foreground">デモ版では変更できません</p>
               </div>
@@ -102,7 +99,7 @@ export default function SettingsPage() {
                   type="email"
                   value={mockUser.email}
                   disabled
-                  className="h-12 rounded-2xl bg-muted"
+                  className="h-14 rounded-lg bg-muted"
                 />
               </div>
             </div>
@@ -135,7 +132,7 @@ export default function SettingsPage() {
                 placeholder="sk-..."
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                className="h-12 rounded-2xl"
+                className="h-14 rounded-lg"
               />
               <p className="text-sm text-muted-foreground">
                 OpenAI APIキーは{" "}
@@ -151,7 +148,7 @@ export default function SettingsPage() {
               </p>
             </div>
 
-            <Button type="submit" disabled={isLoading} className="shadcn-button max-w-xs">
+            <Button type="submit" disabled={isLoading} className="max-w-xs" size="default">
               {isLoading ? "保存中..." : "APIキーを保存"}
             </Button>
           </form>

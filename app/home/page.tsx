@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import Link from "next/link"
+
 import { BookOpen, Share2, User, Settings } from "lucide-react"
 import { mockUser } from "@/lib/mock-data"
 
@@ -11,17 +11,13 @@ export default function HomePage() {
         <div className="container flex h-16 items-center justify-between px-4">
           <h1 className="text-xl font-bold">過去問共有アプリ</h1>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" asChild>
-              <Link href="/account">
-                <User className="h-5 w-5" />
-                <span className="sr-only">アカウント</span>
-              </Link>
+            <Button variant="ghost" size="icon" href="/account">
+              <User className="h-5 w-5" />
+              <span className="sr-only">アカウント</span>
             </Button>
-            <Button variant="ghost" size="icon" asChild>
-              <Link href="/settings">
-                <Settings className="h-5 w-5" />
-                <span className="sr-only">設定</span>
-              </Link>
+            <Button variant="ghost" size="icon" href="/settings">
+              <Settings className="h-5 w-5" />
+              <span className="sr-only">設定</span>
             </Button>
           </div>
         </div>
@@ -47,8 +43,8 @@ export default function HomePage() {
               </div>
             </CardHeader>
             <CardContent>
-              <Button asChild className="w-full" size="lg">
-                <Link href="/study/faculties">始める</Link>
+              <Button className="w-full" size="lg" href="/study/faculties">
+                始める
               </Button>
             </CardContent>
           </Card>
@@ -66,8 +62,8 @@ export default function HomePage() {
               </div>
             </CardHeader>
             <CardContent>
-              <Button asChild className="w-full bg-transparent" size="lg" variant="outline">
-                <Link href="/share">投稿する</Link>
+              <Button className="w-full bg-transparent" size="lg" variant="outline" href="/share">
+                投稿する
               </Button>
             </CardContent>
           </Card>

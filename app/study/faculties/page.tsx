@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
+ 
 import { ChevronLeft } from "lucide-react"
 import { getMockFaculties } from "@/lib/mock-data"
 
@@ -13,11 +13,9 @@ export default function FacultiesPage() {
       {/* PDFの青いヘッダー */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" asChild className="hover:bg-primary/80">
-            <Link href="/home">
-              <ChevronLeft className="h-6 w-6" />
-              <span className="sr-only">戻る</span>
-            </Link>
+          <Button variant="ghost" size="icon" href="/home" className="hover:bg-primary/80">
+            <ChevronLeft className="h-6 w-6" />
+            <span className="sr-only">戻る</span>
           </Button>
           <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
             学部選択
@@ -38,14 +36,12 @@ export default function FacultiesPage() {
             {faculties.map((faculty) => (
               <Button
                 key={faculty.id}
-                asChild
                 variant="secondary" // PDFのグレーボタン (#E0E0E0)
-                className="w-full shadcn-button justify-start" // カスタムクラスを削除し、UIコンポーネントのデフォルトスタイルを使用
+                className="w-full justify-start" // UIコンポーネントのデフォルトスタイルを使用
                 size="default" // h-14
+                href={`/study/departments?faculty=${faculty.id}`}
               >
-                <Link href={`/study/departments?faculty=${faculty.id}`}>
-                  {faculty.name}
-                </Link>
+                {faculty.name}
               </Button>
             ))}
           </div>

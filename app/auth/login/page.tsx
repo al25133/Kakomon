@@ -4,7 +4,7 @@ import type React from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import Link from "next/link"
+ 
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { ChevronLeft } from "lucide-react"
@@ -67,12 +67,9 @@ export default function LoginPage() {
       {/* PDFの青いヘッダー (戻るボタン付き) */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" asChild className="hover:bg-primary/80">
-            {/* ログイン前のため、仮の戻る先としてルートを指定 */}
-            <Link href="/">
-              <ChevronLeft className="h-6 w-6" />
-              <span className="sr-only">戻る</span>
-            </Link>
+          <Button variant="ghost" size="icon" href="/" className="hover:bg-primary/80">
+            <ChevronLeft className="h-6 w-6" />
+            <span className="sr-only">戻る</span>
           </Button>
           <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
             ログイン
@@ -97,7 +94,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
-                className="h-12 rounded-2xl"
+                className="h-14 rounded-lg"
               />
             </div>
             
@@ -111,7 +108,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
-                className="h-12 rounded-2xl"
+                className="h-14 rounded-lg"
               />
             </div>
           </div>
@@ -121,15 +118,14 @@ export default function LoginPage() {
           <div className="flex flex-col items-center gap-6">
             <Button 
               type="submit" 
-              className="w-full max-w-xs shadcn-button"
+              className="w-full max-w-xs"
+              size="default"
               disabled={isLoading}>
               {isLoading ? "ログイン中..." : "ログイン"}
             </Button>
 
-            <Button variant="link" asChild className="text-muted-foreground">
-              <Link href="/auth/sign-up">
-                新規作成
-              </Link>
+            <Button variant="link" className="text-muted-foreground" href="/auth/sign-up">
+              新規作成
             </Button>
           </div>
           

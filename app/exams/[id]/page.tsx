@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
+ 
 import { ChevronLeft } from "lucide-react"
 import { getMockExamById, getMockProfessorById, getMockQuestions } from "@/lib/mock-data"
 import { redirect } from "next/navigation"
@@ -26,11 +26,9 @@ export default async function ExamDetailPage({
       {/* PDFの青いヘッダー */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" asChild className="hover:bg-primary/80">
-            <Link href={`/exams/view?professor=${exam.professor_id}`}>
-              <ChevronLeft className="h-6 w-6" />
-              <span className="sr-only">戻る</span>
-            </Link>
+          <Button variant="ghost" size="icon" href={`/exams/view?professor=${exam.professor_id}`} className="hover:bg-primary/80">
+            <ChevronLeft className="h-6 w-6" />
+            <span className="sr-only">戻る</span>
           </Button>
           <div className="text-center absolute left-1/2 -translate-x-1/2">
             <h1 className="text-xl font-bold">
@@ -57,11 +55,11 @@ export default async function ExamDetailPage({
 
           {/* PDF 6枚目: 質問するボタン */}
           <Button
-            asChild
             className="w-full max-w-xs mx-auto flex"
             size="default"
+            href={`/questions/create?exam=${id}`}
           >
-            <Link href={`/questions/create?exam=${id}`}>質問する</Link>
+            質問する
           </Button>
 
           {/* 関連する質問リスト (PDFにはないが、元の機能として維持) */}

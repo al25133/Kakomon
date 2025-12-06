@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import Link from "next/link"
+ 
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
 import { ChevronLeft } from "lucide-react"
@@ -87,11 +87,9 @@ export default function CreateQuestionPage() {
       <div className="flex flex-col min-h-svh bg-background">
          <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
           <div className="container mx-auto flex h-16 items-center justify-between px-4">
-            <Button variant="ghost" size="icon" asChild className="hover:bg-primary/80">
-              <Link href="/home">
-                <ChevronLeft className="h-6 w-6" />
-                <span className="sr-only">戻る</span>
-              </Link>
+            <Button variant="ghost" size="icon" href="/home" className="hover:bg-primary/80">
+              <ChevronLeft className="h-6 w-6" />
+              <span className="sr-only">戻る</span>
             </Button>
             <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
               エラー
@@ -112,11 +110,9 @@ export default function CreateQuestionPage() {
       {/* PDFの青いヘッダー */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" asChild className="hover:bg-primary/80">
-            <Link href={examId ? `/exams/${examId}` : `/study/professor/${professorId}`}>
-              <ChevronLeft className="h-6 w-6" />
-              <span className="sr-only">戻る</span>
-            </Link>
+          <Button variant="ghost" size="icon" href={examId ? `/exams/${examId}` : `/study/professor/${professorId}`} className="hover:bg-primary/80">
+            <ChevronLeft className="h-6 w-6" />
+            <span className="sr-only">戻る</span>
           </Button>
           <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
             質問する
@@ -136,7 +132,7 @@ export default function CreateQuestionPage() {
               <div className="grid gap-2">
                 <Label htmlFor="exam" className="text-base font-semibold">質問対象の過去問</Label>
                 <Select value={selectedExam} onValueChange={setSelectedExam}>
-                  <SelectTrigger id="exam" className="h-12 rounded-2xl" size="lg">
+                  <SelectTrigger id="exam" className="h-14 rounded-lg" size="lg">
                     <SelectValue placeholder="過去問を選択" />
                   </SelectTrigger>
                   <SelectContent>
@@ -166,13 +162,13 @@ export default function CreateQuestionPage() {
             {/* 質問内容の入力フォーム */}
             <div className="grid gap-2">
               <Label htmlFor="title" className="text-base font-semibold">質問のタイトル</Label>
-              <Input
+                <Input
                 id="title"
                 placeholder="例: この問題の解き方が..."
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="h-12 rounded-2xl"
+                className="h-14 rounded-lg"
               />
             </div>
 
