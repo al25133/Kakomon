@@ -1,102 +1,119 @@
-// モックデータ: サンプルプロジェクト用
 
 export const mockUser = {
   id: "mock-user-1",
-  email: "demo@example.com",
-  display_name: "デモユーザー",
+  email: "demo@shibaura-it.ac.jp",
+  display_name: "芝浦 太郎",
   created_at: new Date().toISOString(),
 }
 
 export const mockFaculties = [
   { id: "1", name: "工学部", created_at: new Date().toISOString() },
-  { id: "2", name: "理学部", created_at: new Date().toISOString() },
-  { id: "3", name: "文学部", created_at: new Date().toISOString() },
-  { id: "4", name: "経済学部", created_at: new Date().toISOString() },
+  { id: "2", name: "システム理工学部", created_at: new Date().toISOString() },
+  { id: "3", name: "デザイン工学部", created_at: new Date().toISOString() },
+  { id: "4", name: "建築学部", created_at: new Date().toISOString() },
 ]
 
 export const mockDepartments = [
-  { id: "1", faculty_id: "1", name: "情報工学科", created_at: new Date().toISOString() },
-  { id: "2", faculty_id: "1", name: "電気工学科", created_at: new Date().toISOString() },
-  { id: "3", faculty_id: "2", name: "数学科", created_at: new Date().toISOString() },
-  { id: "4", faculty_id: "2", name: "物理学科", created_at: new Date().toISOString() },
-  { id: "5", faculty_id: "3", name: "日本文学科", created_at: new Date().toISOString() },
-  { id: "6", faculty_id: "4", name: "経営学科", created_at: new Date().toISOString() },
+  // 工学部
+  { id: "101", faculty_id: "1", name: "機械工学課程", created_at: new Date().toISOString() },
+  { id: "102", faculty_id: "1", name: "物質化学課程", created_at: new Date().toISOString() },
+  { id: "103", faculty_id: "1", name: "電気電子工学課程", created_at: new Date().toISOString() },
+  { id: "104", faculty_id: "1", name: "情報・通信工学課程", created_at: new Date().toISOString() },
+  { id: "105", faculty_id: "1", name: "土木工学課程", created_at: new Date().toISOString() },
+  { id: "106", faculty_id: "1", name: "先進国際課程", created_at: new Date().toISOString() },
+  
+  // システム理工学部
+  { id: "201", faculty_id: "2", name: "電子情報システム学科", created_at: new Date().toISOString() },
+  { id: "202", faculty_id: "2", name: "機械制御システム学科", created_at: new Date().toISOString() },
+  { id: "203", faculty_id: "2", name: "環境システム学科", created_at: new Date().toISOString() },
+  { id: "204", faculty_id: "2", name: "生命科学科", created_at: new Date().toISOString() },
+  { id: "205", faculty_id: "2", name: "数理科学科", created_at: new Date().toISOString() },
+
+  // デザイン工学部 (コースを学科レベルとして扱います)
+  { id: "301", faculty_id: "3", name: "社会情報システムコース", created_at: new Date().toISOString() },
+  { id: "302", faculty_id: "3", name: "UXコース", created_at: new Date().toISOString() },
+  { id: "303", faculty_id: "3", name: "プロダクトコース", created_at: new Date().toISOString() },
+
+  // 建築学部 (コースを学科レベルとして扱います)
+  { id: "401", faculty_id: "4", name: "APコース", created_at: new Date().toISOString() }, // 先進的プロジェクトデザインコース
+  { id: "402", faculty_id: "4", name: "SAコース", created_at: new Date().toISOString() }, // 空間・建築デザインコース
+  { id: "403", faculty_id: "4", name: "UAコース", created_at: new Date().toISOString() }, // 都市・建築デザインコース
 ]
 
 export const mockSubjects = [
-  { id: "1", department_id: "1", name: "データ構造とアルゴリズム", created_at: new Date().toISOString() },
-  { id: "2", department_id: "1", name: "プログラミング基礎", created_at: new Date().toISOString() },
-  { id: "3", department_id: "1", name: "データベース設計", created_at: new Date().toISOString() },
-  { id: "4", department_id: "2", name: "回路理論", created_at: new Date().toISOString() },
-  { id: "5", department_id: "3", name: "線形代数", created_at: new Date().toISOString() },
-  { id: "6", department_id: "3", name: "微分積分学", created_at: new Date().toISOString() },
+  // 工学部 機械工学課程
+  { id: "s101", department_id: "101", name: "材料力学", created_at: new Date().toISOString() },
+  { id: "s102", department_id: "101", name: "熱力学", created_at: new Date().toISOString() },
+  // 工学部 情報・通信工学課程
+  { id: "s103", department_id: "104", name: "アルゴリズムとデータ構造", created_at: new Date().toISOString() },
+  { id: "s104", department_id: "104", name: "通信ネットワーク", created_at: new Date().toISOString() },
+  // システム理工学部 電子情報システム学科
+  { id: "s201", department_id: "201", name: "回路理論", created_at: new Date().toISOString() },
+  { id: "s202", department_id: "201", name: "信号処理", created_at: new Date().toISOString() },
+  // デザイン工学部 UXコース
+  { id: "s301", department_id: "302", name: "UXデザイン概論", created_at: new Date().toISOString() },
+  { id: "s302", department_id: "302", name: "インタフェース設計", created_at: new Date().toISOString() },
+  // 建築学部 SAコース
+  { id: "s401", department_id: "402", name: "建築設計演習", created_at: new Date().toISOString() },
+  { id: "s402", department_id: "402", name: "建築構造力学", created_at: new Date().toISOString() },
 ]
 
 export const mockProfessors = [
-  { id: "1", subject_id: "1", name: "田中太郎", created_at: new Date().toISOString() },
-  { id: "2", subject_id: "1", name: "佐藤花子", created_at: new Date().toISOString() },
-  { id: "3", subject_id: "2", name: "鈴木一郎", created_at: new Date().toISOString() },
-  { id: "4", subject_id: "3", name: "山田次郎", created_at: new Date().toISOString() },
-  { id: "5", subject_id: "5", name: "高橋三郎", created_at: new Date().toISOString() },
+  { id: "p1", subject_id: "s101", name: "佐藤 健一", created_at: new Date().toISOString() },
+  { id: "p2", subject_id: "s103", name: "鈴木 愛", created_at: new Date().toISOString() },
+  { id: "p3", subject_id: "s201", name: "高橋 誠", created_at: new Date().toISOString() },
+  { id: "p4", subject_id: "s301", name: "田中 美咲", created_at: new Date().toISOString() },
+  { id: "p5", subject_id: "s401", name: "伊藤 建築", created_at: new Date().toISOString() },
 ]
 
 export const mockExams = [
   {
-    id: "1",
-    professor_id: "1",
-    title: "2023年度 中間試験",
+    id: "e1",
+    professor_id: "p1",
+    title: "2023年度 前期中間試験",
     year: 2023,
     semester: "前期",
     exam_type: "中間試験",
     content:
-      "1. 二分探索木について説明せよ。\n2. クイックソートのアルゴリズムを擬似コードで記述せよ。\n3. ハッシュテーブルの衝突解決法を2つ挙げ、それぞれの特徴を述べよ。",
+      "1. 単純支持はりのせん断力図(SFD)と曲げモーメント図(BMD)を描け。\n2. 応力とひずみの関係について、フックの法則を用いて説明せよ。",
     user_id: "mock-user-1",
-    created_at: new Date("2023-07-15").toISOString(),
+    created_at: new Date("2023-06-20").toISOString(),
   },
   {
-    id: "2",
-    professor_id: "1",
-    title: "2023年度 期末試験",
+    id: "e2",
+    professor_id: "p2",
+    title: "2023年度 後期期末試験",
     year: 2023,
-    semester: "前期",
+    semester: "後期",
     exam_type: "期末試験",
     content:
-      "1. グラフの深さ優先探索（DFS）と幅優先探索（BFS）について説明せよ。\n2. 動的計画法を用いたナップサック問題の解法を説明せよ。\n3. 最短経路問題のアルゴリズムを2つ挙げ、それぞれの計算量を述べよ。",
+      "1. クイックソートのアルゴリズムを擬似コードで記述し、計算量について考察せよ。\n2. 二分探索木の探索、挿入、削除の操作について説明せよ。",
     user_id: "mock-user-1",
-    created_at: new Date("2023-09-20").toISOString(),
+    created_at: new Date("2024-01-25").toISOString(),
   },
   {
-    id: "3",
-    professor_id: "2",
-    title: "2024年度 中間試験",
+    id: "e3",
+    professor_id: "p5",
+    title: "2024年度 設計課題講評",
     year: 2024,
     semester: "前期",
-    exam_type: "中間試験",
+    exam_type: "課題提出",
     content:
-      "1. 平衡二分探索木（AVL木）について説明せよ。\n2. ヒープソートのアルゴリズムと計算量について述べよ。\n3. 赤黒木の性質を列挙し、その利点を説明せよ。",
+      "「都市の中の隠れ家」をテーマにした設計課題において、各自のコンセプトと空間構成の意図を記述すること。また、周辺環境との関係性についても触れること。",
     user_id: "mock-user-1",
-    created_at: new Date("2024-07-10").toISOString(),
+    created_at: new Date("2024-07-15").toISOString(),
   },
 ]
 
 export const mockQuestions = [
   {
-    id: "1",
-    exam_id: "1",
-    professor_id: "1",
+    id: "q1",
+    exam_id: "e1",
+    professor_id: "p1",
     user_id: "mock-user-1",
-    title: "二分探索木の削除操作について",
-    content: "二分探索木でノードを削除する際、子が2つある場合の処理方法について詳しく教えてください。",
-    created_at: new Date("2023-07-20").toISOString(),
-  },
-  {
-    id: "2",
-    exam_id: "2",
-    professor_id: "1",
-    user_id: "mock-user-1",
-    title: "ダイクストラ法の実装について",
-    content: "ダイクストラ法を実装する際、優先度付きキューを使う理由を教えてください。",
-    created_at: new Date("2023-09-25").toISOString(),
+    title: "SFDの符号について",
+    content: "せん断力の符号の定義がいまいち分かりません。時計回りに回そうとする力がプラスで合っていますか？",
+    created_at: new Date("2023-06-22").toISOString(),
   },
 ]
 

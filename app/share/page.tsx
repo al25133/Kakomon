@@ -12,12 +12,10 @@ import { useState, useEffect } from "react"
 import { ChevronLeft } from "lucide-react"
 import { getMockFaculties, getMockDepartments, getMockSubjects, getMockProfessors, getMockDepartmentById, getMockSubjectById } from "@/lib/mock-data"
 
-// PDFのデザインカンプ (2枚目、3枚目) に基づいてレイアウトを変更
-// ステップ管理を追加
+
 export default function SharePage() {
   const [step, setStep] = useState(1) // 1: 選択, 2: アップロード
 
-  // ステップ1のデータ
   const [selectedFaculty, setSelectedFaculty] = useState("")
   const [selectedDepartment, setSelectedDepartment] = useState("")
   const [selectedSubject, setSelectedSubject] = useState("")
@@ -26,14 +24,12 @@ export default function SharePage() {
   const [semester, setSemester] = useState("")
   const [examType, setExamType] = useState("")
 
-  // ステップ2のデータ
   const [title, setTitle] = useState("") // PDFにはないが、元のコードにあったため維持
   const [content, setContent] = useState("") // PDFでは画像アップロードだが、デモはテキスト入力
 
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
-  // 依存データ
   const faculties = getMockFaculties()
   const departments = selectedFaculty ? getMockDepartments(selectedFaculty) : []
   const subjects = selectedDepartment ? getMockSubjects(selectedDepartment) : []
