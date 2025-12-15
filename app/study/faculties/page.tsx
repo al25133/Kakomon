@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -12,7 +11,6 @@ import { useToast } from "@/hooks/use-toast"
 
 // 閲覧用の学部・学科選択を1ページで完結させる
 export default function FacultiesPage() {
-  const router = useRouter()
   const { toast } = useToast()
   const fixedWidthClass = "w-[33vw] min-w-[33vw] max-w-[33vw]"
 
@@ -42,10 +40,10 @@ export default function FacultiesPage() {
     setSelectedProfessor("")
   }, [selectedSubject])
 
+  const canProceed = Boolean(selectedFaculty && selectedDepartment && selectedSubject && selectedProfessor)
+
   const handleNext = () => {
-    if (selectedFaculty && selectedDepartment && selectedSubject && selectedProfessor) {
-      router.push(`/study/professor/${selectedProfessor}`)
-    } else {
+    if (!canProceed) {
       toast({
         title: "選択が不足しています",
         description: "学部・学科・科目・教授をすべて選択してください。",
@@ -140,7 +138,12 @@ export default function FacultiesPage() {
           </div>
 
           <div className="flex justify-center w-full">
-            <Button onClick={handleNext} className={`${fixedWidthClass} no-underline`} size="default">
+            <Button
+              href={canProceed ? `/study/professor/${selectedProfessor}` : undefined}
+              onClick={!canProceed ? handleNext : undefined}
+              className={`${fixedWidthClass} no-underline`}
+              size="default"
+            >
               次へ
             </Button>
           </div>
