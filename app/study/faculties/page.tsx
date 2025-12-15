@@ -65,12 +65,12 @@ export default function FacultiesPage() {
 
       {/* メインコンテンツ */}
       <main className="container mx-auto flex flex-1 flex-col p-4 py-8">
-        <div className="w-full max-w-md mx-auto space-y-8 py-4">
-          <div className="space-y-6">
+        <div className="w-full mx-auto space-y-8 py-4 flex flex-col items-center">
+          <div className="space-y-8 w-[33vw] min-w-[33vw] max-w-[33vw]">
             <div className="grid gap-2">
               <Label htmlFor="faculty" className="text-base font-semibold">学部・専攻</Label>
               <Select value={selectedFaculty} onValueChange={setSelectedFaculty}>
-                <SelectTrigger id="faculty" className="h-14 rounded-lg">
+                <SelectTrigger id="faculty" className="h-14 rounded-full">
                   <SelectValue placeholder="学部を選択" />
                 </SelectTrigger>
                 <SelectContent>
@@ -86,7 +86,7 @@ export default function FacultiesPage() {
             <div className="grid gap-2">
               <Label htmlFor="department" className="text-base font-semibold">学科・コース</Label>
               <Select value={selectedDepartment} onValueChange={setSelectedDepartment} disabled={!selectedFaculty}>
-                <SelectTrigger id="department" className="h-14 rounded-lg">
+                <SelectTrigger id="department" className="h-14 rounded-full">
                   <SelectValue placeholder="学科を選択" />
                 </SelectTrigger>
                 <SelectContent>
@@ -102,7 +102,7 @@ export default function FacultiesPage() {
             <div className="grid gap-2">
               <Label htmlFor="subject" className="text-base font-semibold">科目</Label>
               <Select value={selectedSubject} onValueChange={setSelectedSubject} disabled={!selectedDepartment}>
-                <SelectTrigger id="subject" className="h-14 rounded-lg">
+                <SelectTrigger id="subject" className="h-14 rounded-full">
                   <SelectValue placeholder="科目を選択" />
                 </SelectTrigger>
                 <SelectContent>
@@ -118,7 +118,7 @@ export default function FacultiesPage() {
             <div className="grid gap-2">
               <Label htmlFor="professor" className="text-base font-semibold">教授</Label>
               <Select value={selectedProfessor} onValueChange={setSelectedProfessor} disabled={!selectedSubject}>
-                <SelectTrigger id="professor" className="h-14 rounded-lg">
+                <SelectTrigger id="professor" className="h-14 rounded-full">
                   <SelectValue placeholder="教授を選択" />
                 </SelectTrigger>
                 <SelectContent>
@@ -132,8 +132,8 @@ export default function FacultiesPage() {
             </div>
           </div>
 
-          <div className="flex justify-center">
-            <Button onClick={handleNext} className="md:w-2/5 no-underline" size="default">
+          <div className="flex justify-center w-full">
+            <Button onClick={handleNext} className="w-[33vw] min-w-[33vw] max-w-[33vw] no-underline" size="default">
               次へ
             </Button>
           </div>

@@ -33,11 +33,11 @@ export default function HomePage() {
         </Button>
       </header>
 
-      <main className="flex min-h-svh items-center justify-center px-6 py-16">
-        <div className="flex w-full flex-col items-center gap-6 text-center">
+      <main className="flex min-h-svh flex-col items-center justify-start px-6 pt-20 pb-12">
+        <div className="flex w-full flex-col items-center gap-4 text-center">
           <p className="text-base text-foreground">芝浦工業大学の過去問共有にようこそ</p>
           <h1 className="text-3xl font-black tracking-wide uppercase text-foreground">過去問共有</h1>
-          <div className="flex w-full flex-col items-center gap-3">
+          <div className="flex w-full flex-col items-center">
             <Button asChild size="lg" className="w-2/5 min-w-[12rem] no-underline">
               <Link href="/share" className="no-underline">共有</Link>
             </Button>

@@ -43,12 +43,19 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<any, ButtonProps>(
-  ({ className, variant, size, asChild = false, href, children, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, href, children, style, ...props }, ref) => {
     const classes = cn(buttonVariants({ variant, size, className }))
+    const mergedStyle = { marginTop: "1.5rem", ...(style as React.CSSProperties) }
 
     if (href) {
       return (
-        <Link href={href} className={classes} ref={ref} {...(props as any)}>
+        <Link
+          href={href}
+          className={classes}
+          ref={ref}
+          style={mergedStyle}
+          {...(props as any)}
+        >
           {children}
         </Link>
       )
@@ -59,6 +66,7 @@ const Button = React.forwardRef<any, ButtonProps>(
       <Comp
         className={classes}
         ref={ref}
+        style={mergedStyle}
         {...props}
       >
         {children}
