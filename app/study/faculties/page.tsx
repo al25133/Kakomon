@@ -1,16 +1,55 @@
-import { Button } from "@/components/ui/button"
- 
-import { ChevronLeft } from "lucide-react"
-import { getMockFaculties } from "@/lib/mock-data"
+"use client"
 
-// PDF 5枚目 (閲覧画面) のデザインを適用
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+
+import { Button } from "@/components/ui/button"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
+import { ChevronLeft } from "lucide-react"
+import { getMockFaculties, getMockDepartments, getMockSubjects, getMockProfessors } from "@/lib/mock-data"
+
+// 閲覧用の学部・学科選択を1ページで完結させる
 export default function FacultiesPage() {
+  const router = useRouter()
+
+  const [selectedFaculty, setSelectedFaculty] = useState("")
+  const [selectedDepartment, setSelectedDepartment] = useState("")
+  const [selectedSubject, setSelectedSubject] = useState("")
+  const [selectedProfessor, setSelectedProfessor] = useState("")
+
   const faculties = getMockFaculties()
+  const departments = selectedFaculty ? getMockDepartments(selectedFaculty) : []
+  const subjects = selectedDepartment ? getMockSubjects(selectedDepartment) : []
+  const professors = selectedSubject ? getMockProfessors(selectedSubject) : []
+
+  // 上位が変わったら下位選択をリセット
+  useEffect(() => {
+    setSelectedDepartment("")
+    setSelectedSubject("")
+    setSelectedProfessor("")
+  }, [selectedFaculty])
+
+  useEffect(() => {
+    setSelectedSubject("")
+    setSelectedProfessor("")
+  }, [selectedDepartment])
+
+  useEffect(() => {
+    setSelectedProfessor("")
+  }, [selectedSubject])
+
+  const handleNext = () => {
+    if (selectedFaculty && selectedDepartment && selectedSubject && selectedProfessor) {
+      router.push(`/study/professor/${selectedProfessor}`)
+    } else {
+      alert("すべての項目を選択してください")
+    }
+  }
 
   return (
     <div className="flex flex-col min-h-svh bg-background">
-      
-      {/* PDFの青いヘッダー */}
+      {/* ヘッダー */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Button variant="ghost" size="icon" href="/home" className="hover:bg-primary/80">
@@ -18,7 +57,7 @@ export default function FacultiesPage() {
             <span className="sr-only">戻る</span>
           </Button>
           <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
-            学部選択
+            閲覧設定
           </h1>
           <div></div>
         </div>
@@ -26,26 +65,78 @@ export default function FacultiesPage() {
 
       {/* メインコンテンツ */}
       <main className="container mx-auto flex flex-1 flex-col p-4 py-8">
-        <div className="w-full max-w-md mx-auto space-y-6">
-          
-          <h2 className="text-xl font-semibold text-center text-foreground">
-            学部・専攻を選んでください
-          </h2>
+        <div className="w-full max-w-md mx-auto space-y-8 py-4">
+          <div className="space-y-6">
+            <div className="grid gap-2">
+              <Label htmlFor="faculty" className="text-base font-semibold">学部・専攻</Label>
+              <Select value={selectedFaculty} onValueChange={setSelectedFaculty}>
+                <SelectTrigger id="faculty" className="h-14 rounded-lg">
+                  <SelectValue placeholder="学部を選択" />
+                </SelectTrigger>
+                <SelectContent>
+                  {faculties.map((faculty) => (
+                    <SelectItem key={faculty.id} value={faculty.id}>
+                      {faculty.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div className="flex flex-col gap-4">
-            {faculties.map((faculty) => (
-              <Button
-                key={faculty.id}
-                variant="secondary" // PDFのグレーボタン (#E0E0E0)
-                className="w-full justify-start" // UIコンポーネントのデフォルトスタイルを使用
-                size="default" // h-14
-                href={`/study/departments?faculty=${faculty.id}`}
-              >
-                {faculty.name}
-              </Button>
-            ))}
+            <div className="grid gap-2">
+              <Label htmlFor="department" className="text-base font-semibold">学科・コース</Label>
+              <Select value={selectedDepartment} onValueChange={setSelectedDepartment} disabled={!selectedFaculty}>
+                <SelectTrigger id="department" className="h-14 rounded-lg">
+                  <SelectValue placeholder="学科を選択" />
+                </SelectTrigger>
+                <SelectContent>
+                  {departments.map((department) => (
+                    <SelectItem key={department.id} value={department.id}>
+                      {department.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="subject" className="text-base font-semibold">科目</Label>
+              <Select value={selectedSubject} onValueChange={setSelectedSubject} disabled={!selectedDepartment}>
+                <SelectTrigger id="subject" className="h-14 rounded-lg">
+                  <SelectValue placeholder="科目を選択" />
+                </SelectTrigger>
+                <SelectContent>
+                  {subjects.map((subject) => (
+                    <SelectItem key={subject.id} value={subject.id}>
+                      {subject.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="professor" className="text-base font-semibold">教授</Label>
+              <Select value={selectedProfessor} onValueChange={setSelectedProfessor} disabled={!selectedSubject}>
+                <SelectTrigger id="professor" className="h-14 rounded-lg">
+                  <SelectValue placeholder="教授を選択" />
+                </SelectTrigger>
+                <SelectContent>
+                  {professors.map((professor) => (
+                    <SelectItem key={professor.id} value={professor.id}>
+                      {professor.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-          
+
+          <div className="flex justify-center">
+            <Button onClick={handleNext} className="md:w-2/5 no-underline" size="default">
+              次へ
+            </Button>
+          </div>
         </div>
       </main>
     </div>

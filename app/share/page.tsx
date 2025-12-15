@@ -99,7 +99,7 @@ export default function SharePage() {
       
       {/* PDFの青いヘッダー (戻るボタン付き) */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <div className="container mx-auto flex h-20 items-center justify-between px-4">
           <Button
             variant="ghost"
             size="icon"
@@ -121,12 +121,12 @@ export default function SharePage() {
       <main className="container mx-auto flex flex-1 flex-col p-4">
         {step === 1 && (
           // PDF 2枚目: 選択画面
-          <div className="w-full max-w-md mx-auto space-y-8 py-8">
-            <div className="space-y-6">
+          <div className="w-full mx-auto space-y-8 py-8 flex flex-col items-center">
+            <div className="space-y-8 w-[33vw] min-w-[33vw] max-w-[33vw]">
               <div className="grid gap-2">
                 <Label htmlFor="faculty" className="text-base font-semibold">学部・専攻</Label>
                 <Select value={selectedFaculty} onValueChange={setSelectedFaculty}>
-                  <SelectTrigger id="faculty" className="h-14 rounded-lg shadcn-select-trigger">
+                  <SelectTrigger id="faculty" className="h-14 rounded-full shadcn-select-trigger">
                     <SelectValue placeholder="学部を選択" />
                   </SelectTrigger>
                   <SelectContent>
@@ -142,7 +142,7 @@ export default function SharePage() {
               <div className="grid gap-2">
                 <Label htmlFor="department" className="text-base font-semibold">学科・コース</Label>
                 <Select value={selectedDepartment} onValueChange={setSelectedDepartment} disabled={!selectedFaculty}>
-                  <SelectTrigger id="department" className="h-14 rounded-lg shadcn-select-trigger">
+                  <SelectTrigger id="department" className="h-14 rounded-full shadcn-select-trigger">
                     <SelectValue placeholder="学科を選択" />
                   </SelectTrigger>
                   <SelectContent>
@@ -158,7 +158,7 @@ export default function SharePage() {
               <div className="grid gap-2">
                 <Label htmlFor="subject" className="text-base font-semibold">科目</Label>
                 <Select value={selectedSubject} onValueChange={setSelectedSubject} disabled={!selectedDepartment}>
-                  <SelectTrigger id="subject" className="h-14 rounded-lg shadcn-select-trigger">
+                  <SelectTrigger id="subject" className="h-14 rounded-full shadcn-select-trigger">
                     <SelectValue placeholder="科目を選択" />
                   </SelectTrigger>
                   <SelectContent>
@@ -174,7 +174,7 @@ export default function SharePage() {
               <div className="grid gap-2">
                 <Label htmlFor="professor" className="text-base font-semibold">教授</Label>
                 <Select value={selectedProfessor} onValueChange={setSelectedProfessor} disabled={!selectedSubject}>
-                  <SelectTrigger id="professor" className="h-14 rounded-lg shadcn-select-trigger">
+                  <SelectTrigger id="professor" className="h-14 rounded-full shadcn-select-trigger">
                     <SelectValue placeholder="教授を選択" />
                   </SelectTrigger>
                   <SelectContent>
@@ -188,13 +188,15 @@ export default function SharePage() {
               </div>
             </div>
 
-            <Button 
-              onClick={handleNextStep}
-              className="w-full max-w-xs mx-auto flex"
-              size="default"
-            >
-              次へ
-            </Button>
+            <div className="flex justify-center w-full">
+              <Button 
+                onClick={handleNextStep}
+                className="w-[33vw] min-w-[33vw] max-w-[33vw] no-underline"
+                size="default"
+              >
+                次へ
+              </Button>
+            </div>
           </div>
         )}
 
@@ -234,14 +236,16 @@ export default function SharePage() {
               </div>
             </div>
 
-            <Button 
-              type="submit"
-              className="w-full max-w-xs mx-auto flex"
-              size="default"
-              disabled={isLoading}
-            >
-              {isLoading ? "アップロード中..." : "アップロードする"}
-            </Button>
+            <div className="flex justify-center">
+              <Button 
+                type="submit"
+                className="md:w-2/5 no-underline"
+                size="default"
+                disabled={isLoading}
+              >
+                {isLoading ? "アップロード中..." : "アップロードする"}
+              </Button>
+            </div>
           </form>
         )}
       </main>

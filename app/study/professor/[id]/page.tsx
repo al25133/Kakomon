@@ -33,7 +33,7 @@ export default async function ProfessorDetailPage({
       {/* PDFの青いヘッダー */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" href={`/study/professors?subject=${professor.subject_id}`} className="hover:bg-primary/80">
+          <Button variant="ghost" size="icon" href="/study/faculties" className="hover:bg-primary/80">
             <ChevronLeft className="h-6 w-6" />
             <span className="sr-only">戻る</span>
           </Button>
@@ -49,12 +49,12 @@ export default async function ProfessorDetailPage({
 
       {/* メインコンテンツ (ホーム画面のボタンレイアウト流用) */}
       <main className="container mx-auto flex flex-1 flex-col items-center justify-center p-4">
-        <div className="flex flex-col items-center gap-12 w-full max-w-xs">
+        <div className="flex flex-col items-center gap-12 w-full">
           
           {/* 閲覧ボタン (PDFのプライマリボタン) */}
           <Button
-            className="w-full"
-            size="default" // h-14
+            className="md:w-2/5 no-underline"
+            size="default"
             href={`/exams/view?professor=${id}`}
           >
             過去問を閲覧
@@ -62,8 +62,8 @@ export default async function ProfessorDetailPage({
 
           {/* 類題作成ボタン (PDFのセカンダリボタン) */}
           <Button
-            className="w-full bg-muted text-muted-foreground hover:bg-muted/90"
-            size="default" // h-14
+            className="md:w-2/5 no-underline"
+            size="default"
             variant="secondary"
             href={`/exams/generate?professor=${id}`}
           >
@@ -72,8 +72,8 @@ export default async function ProfessorDetailPage({
 
           {/* 質問するボタン (PDFのセカンダリボタン) */}
           <Button
-            className="w-full bg-muted text-muted-foreground hover:bg-muted/90"
-            size="default" // h-14
+            className="md:w-2/5 no-underline"
+            size="default"
             variant="secondary"
             href={`/questions/create?professor=${id}`}
           >

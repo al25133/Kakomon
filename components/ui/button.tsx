@@ -11,21 +11,21 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-[#FBFEFF] text-[#3769F4] border border-[#3769F4] hover:bg-[#3769F4] hover:text-[#FBFEFF] active:bg-[#3769F4] active:text-[#FBFEFF]",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-input bg-background hover:bg-blue-600 hover:text-white hover:border-blue-600 active:bg-blue-600 active:text-white active:border-blue-600",
+          "bg-[#FBFEFF] text-[#3769F4] border border-[#3769F4] hover:bg-[#3769F4] hover:text-[#FBFEFF] active:bg-[#3769F4] active:text-[#FBFEFF]",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-[#FBFEFF] text-[#3769F4] border border-[#3769F4] hover:bg-[#3769F4] hover:text-[#FBFEFF] active:bg-[#3769F4] active:text-[#FBFEFF]",
+        ghost: "bg-[#FBFEFF] text-[#3769F4] hover:bg-[#3769F4] hover:text-[#FBFEFF] active:bg-[#3769F4] active:text-[#FBFEFF]",
+        link: "text-[#3769F4] underline-offset-4 hover:no-underline hover:text-[#3769F4]",
       },
       size: {
-        default: "h-14 px-6 py-3",
-        sm: "h-10 rounded-md px-3",
-        lg: "h-16 rounded-lg px-10",
-        icon: "h-12 w-12",
+        default: "h-[5rem] px-10 w-2/5 max-w-md min-w-[240px] text-xl rounded-full",
+        sm: "h-[2rem] px-6 w-2/5 max-w-md min-w-[200px] text-lg rounded-full",
+        lg: "h-[5rem] px-12 w-2/5 max-w-md min-w-[260px] text-2xl rounded-full",
+        icon: "h-[5rem] w-12 p-0",
       },
     },
     defaultVariants: {

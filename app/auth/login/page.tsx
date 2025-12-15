@@ -118,7 +118,7 @@ export default function LoginPage() {
           <div className="flex flex-col items-center gap-6">
             <Button 
               type="submit" 
-              className="w-full max-w-xs"
+              className="w-full md:w-2/5 max-w-md h-36 text-xl rounded-full"
               size="default"
               disabled={isLoading}>
               {isLoading ? "ログイン中..." : "ログイン"}

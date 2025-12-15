@@ -27,7 +27,7 @@ function ViewExamsContent() {
       
       {/* PDFの青いヘッダー */}
       <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <div className="container mx-auto flex h-20 items-center justify-between px-4">
           <Button variant="ghost" size="icon" href={`/study/professor/${professor}`} className="hover:bg-primary/80">
             <ChevronLeft className="h-6 w-6" />
             <span className="sr-only">戻る</span>
@@ -47,19 +47,19 @@ function ViewExamsContent() {
 
       {/* メインコンテンツ */}
       <main className="container mx-auto flex flex-1 flex-col p-4 py-8">
-        <div className="w-full max-w-md mx-auto space-y-6">
+        <div className="w-full mx-auto space-y-6 flex flex-col items-center">
           
-          <h2 className="text-xl font-semibold text-center text-foreground">
+          <h2 className="text-xl font-semibold text-center text-foreground w-[33vw] min-w-[33vw] max-w-[33vw]">
             年度を選んでください
           </h2>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-6 w-[33vw] min-w-[33vw] max-w-[33vw]">
             {exams && exams.length > 0 ? (
               exams.map((exam) => (
                 <Button
                   key={exam.id}
                   variant="secondary"
-                  className="w-full justify-start"
+                  className="w-full justify-start rounded-full"
                   size="default"
                   href={`/exams/${exam.id}`}
                 >
@@ -74,7 +74,7 @@ function ViewExamsContent() {
           </div>
           
           <Button
-            className="w-full max-w-xs mx-auto flex"
+            className="w-[33vw] min-w-[33vw] max-w-[33vw] mx-auto flex"
             size="default"
             href={`/exams/generate?professor=${professor}`}
           >

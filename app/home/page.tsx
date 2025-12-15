@@ -1,107 +1,53 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
-
-import { BookOpen, Share2, User, Settings } from "lucide-react"
-import { mockUser } from "@/lib/mock-data"
-
+import { Settings, User } from "lucide-react"
 
 export default function HomePage() {
   return (
-    <div className="min-h-svh bg-gradient-to-br from-background to-muted">
-      {/* ヘッダー */}
-      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between px-4">
-          <h1 className="text-xl font-bold">過去問共有アプリ</h1>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" href="/account">
-              <User className="h-5 w-5" />
-              <span className="sr-only">アカウント</span>
-            </Button>
-            <Button variant="ghost" size="icon" href="/settings">
-              <Settings className="h-5 w-5" />
-              <span className="sr-only">設定</span>
-            </Button>
-          </div>
-        </div>
+    <div className="relative min-h-svh bg-background">
+      <header
+        className="fixed top-4 right-4 z-20 flex items-center gap-2 pointer-events-auto"
+        style={{ left: "auto", right: "1rem" }}
+      >
+        <Button
+          variant="ghost"
+          size="icon"
+          className="bg-transparent hover:bg-transparent focus-visible:ring-0"
+          asChild
+        >
+          <Link href="/account" className="no-underline">
+            <User className="h-5 w-5" />
+            <span className="sr-only">アカウント</span>
+          </Link>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="bg-transparent hover:bg-transparent focus-visible:ring-0"
+          asChild
+        >
+          <Link href="/settings" className="no-underline">
+            <Settings className="h-5 w-5" />
+            <span className="sr-only">設定</span>
+          </Link>
+        </Button>
       </header>
 
-      {/* メイン */}
-      <main className="container px-4 py-8">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">
-            ようこそ、{mockUser.display_name}さん
-          </h2>
-          <p className="text-muted-foreground">
-            過去問を閲覧したり、共有したりできます
-          </p>
-        </div>
-
-        {/* ここが「縦一列」のコンテナ */}
-        <div className="flex flex-col gap-6 max-w-md">
-          {/* 閲覧 */}
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-lg bg-primary/10">
-                  <BookOpen className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <CardTitle>閲覧</CardTitle>
-                  <CardDescription>
-                    過去問を閲覧・質問
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full" size="lg" href="/study/faculties">
-                始める
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* 共有する */}
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-lg bg-primary/10">
-                  <Share2 className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <CardTitle>共有する</CardTitle>
-                  <CardDescription>過去問を投稿して共有</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full bg-transparent" size="lg" variant="outline" href="/share">
-                投稿する
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* 類題作成 */}
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-lg bg-primary/10">
-                  <Share2 className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <CardTitle>類題作成</CardTitle>
-                  <CardDescription>
-                    既存の過去問から類題を作成
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Button asChild className="w-full" size="lg" variant="outline">
-                <Link href="/ruidaisakusei">類題作成へ</Link>
-              </Button>
-            </CardContent>
-          </Card>
+      <main className="flex min-h-svh items-center justify-center px-6 py-16">
+        <div className="flex w-full flex-col items-center gap-6 text-center">
+          <p className="text-base text-foreground">芝浦工業大学の過去問共有にようこそ</p>
+          <h1 className="text-3xl font-black tracking-wide uppercase text-foreground">過去問共有</h1>
+          <div className="flex w-full flex-col items-center gap-3">
+            <Button asChild size="lg" className="w-2/5 min-w-[12rem] no-underline">
+              <Link href="/share" className="no-underline">共有</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="w-2/5 min-w-[12rem] no-underline">
+              <Link href="/study/faculties" className="no-underline">閲覧</Link>
+            </Button>
+            <Button asChild size="lg" variant="secondary" className="w-2/5 min-w-[12rem] no-underline">
+              <Link href="/ruidaisakusei" className="no-underline">類題作成</Link>
+            </Button>
+          </div>
         </div>
       </main>
     </div>

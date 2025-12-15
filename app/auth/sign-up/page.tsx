@@ -116,7 +116,11 @@ export default function SignUpPage() {
                     />
                   </div>
                   {error && <p className="text-sm text-destructive">{error}</p>}
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button
+                    type="submit"
+                    className="w-full md:w-2/5 max-w-md h-36 text-xl rounded-full"
+                    disabled={isLoading}
+                  >
                     {isLoading ? "登録中..." : "登録"}
                   </Button>
                 </div>
