@@ -73,7 +73,7 @@ export default function SharePage() {
   return (
     <div className="flex flex-col min-h-svh bg-background">
       
-      {/* PDFの青いヘッダー (戻るボタン付き) */}
+      {/* PDFのヘッダー (戻るボタン付き) */}
       <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-20 items-center justify-between px-4">
           <Button
