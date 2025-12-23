@@ -14,7 +14,7 @@ function ErrorContent() {
   return (
     <div className="flex flex-col min-h-svh bg-background">
       
-      {/* PDFの青いヘッダー (ロゴのみ) */}
+      {/* PDFのヘッダー (ロゴのみ) */}
       <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-center px-4">
           <h1 className="text-xl font-bold">
