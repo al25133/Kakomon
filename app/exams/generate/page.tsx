@@ -1,237 +1,296 @@
 "use client"
 
+import { useState } from "react"
+import { FacultySelectionForm, emptyFacultySelection, isFacultySelectionComplete, type FacultySelectionValue } from "@/components/faculty-selection"
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Label } from "@/components/ui/label"
- 
-import { useSearchParams } from "next/navigation"
-import { useState, useEffect } from "react"
-import { ChevronLeft, Sparkles, AlertCircle } from "lucide-react"
-import { getMockExams, getMockProfessorById } from "@/lib/mock-data"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Loader2, Sparkles, BookOpen, ArrowRight } from "lucide-react"
+import { toast } from "sonner"
+import { useRouter, useSearchParams } from "next/navigation"
+import { getMockProfessorById, getMockSubjectById } from "@/lib/mock-data"
 
-// PDF 9枚目 (類題作成) のデザインを適用
-export default function GenerateExamPage() {
+export default function GenerateSimilarQuestionsPage() {
+  const router = useRouter()
   const searchParams = useSearchParams()
-  const professorId = searchParams.get("professor")
-  const professor = getMockProfessorById(professorId || "")
 
-  const [exams, setExams] = useState<
-    Array<{ id: string; title: string; content: string; year: number | null; semester: string | null }>
-  >([])
-  const [selectedExam, setSelectedExam] = useState("")
-  const [generatedContent, setGeneratedContent] = useState("")
-  const [hasApiKey, setHasApiKey] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [step, setStep] = useState(1) // 1: 選択, 2: 確認, 3: 結果
+  const professorId = searchParams.get("professor") || ""
+  const professor = professorId ? getMockProfessorById(professorId) : undefined
+  const subject = professor ? getMockSubjectById(professor.subject_id) : undefined
 
-  useEffect(() => {
-    const storedKey = localStorage.getItem("openai_api_key") || ""
-    setHasApiKey(!!storedKey)
+  const [selection, setSelection] = useState<FacultySelectionValue>(emptyFacultySelection)
+  const [originalQuestion, setOriginalQuestion] = useState("")
+  const [generatedQuestions, setGeneratedQuestions] = useState<string[]>([])
+  const [isGenerating, setIsGenerating] = useState(false)
 
-    if (professorId) {
-      const mockExams = getMockExams(professorId)
-      setExams(mockExams)
+  const hasProfessor = Boolean(professorId)
+
+  const handleSelectSubmit = () => {
+    if (!isFacultySelectionComplete(selection)) {
+      toast.error("学部・学科・科目・教授をすべて選択してください")
+      return
     }
-  }, [professorId])
+    router.push(`/exams/generate?professor=${selection.professorId}`)
+  }
 
   const handleGenerate = async () => {
-    if (!selectedExam) {
-      setError("過去問を選択してください")
+    if (!originalQuestion.trim()) {
+      toast.error("元の問題を入力してください")
       return
     }
 
-    setIsLoading(true)
-    setError(null)
-    setGeneratedContent("")
-    setStep(3) // 結果表示ステップへ
+    setIsGenerating(true)
 
     try {
-      const exam = exams.find((e) => e.id === selectedExam)
-      if (!exam) throw new Error("過去問が見つかりません")
-
-      const apiKey = localStorage.getItem("openai_api_key")
+      const apiKey = localStorage.getItem("openai_api_key") || ""
       if (!apiKey) {
-        throw new Error("APIキーが設定されていません")
+        toast.error("設定画面でAPIキーを登録してください")
+        setIsGenerating(false)
+        return
       }
 
       const response = await fetch("/api/generate-similar", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ examContent: exam.content, apiKey }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ examContent: originalQuestion, apiKey }),
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || "生成に失敗しました")
+        throw new Error("類題の生成に失敗しました")
       }
 
       const data = await response.json()
-      setGeneratedContent(data.content)
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "類題の生成に失敗しました")
+      const content = data.content || ""
+      setGeneratedQuestions(content ? [content] : [])
+      toast.success("類題を生成しました！")
+    } catch (error) {
+      console.error("[v0] Error generating similar questions:", error)
+      toast.error("類題の生成に失敗しました。設定でAPIキーを確認してください。")
     } finally {
-      setIsLoading(false)
+      setIsGenerating(false)
     }
   }
 
-  if (!professorId) {
-    // ... エラー表示 (変更なし) ...
+  const Header = (
+    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <BookOpen className="h-6 w-6 text-primary" />
+          <h1 className="text-xl font-bold">Kakomon</h1>
+        </div>
+        <nav className="flex items-center gap-6">
+          <a href="/home" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            ホーム
+          </a>
+          <a
+            href="/study/faculties"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            過去問閲覧
+          </a>
+          <a href="/settings" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            設定
+          </a>
+        </nav>
+      </div>
+    </header>
+  )
+
+  if (!hasProfessor) {
     return (
-      <div className="flex flex-col min-h-svh bg-background">
-         <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
-          <div className="container mx-auto flex h-16 items-center justify-between px-4">
-            <Button variant="ghost" size="icon" href="/home" className="hover:bg-primary/80">
-              <ChevronLeft className="h-6 w-6" />
-              <span className="sr-only">戻る</span>
-            </Button>
-            <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
-              エラー
-            </h1>
-            <div></div>
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+        {Header}
+
+        <section className="container mx-auto px-4 py-16 text-center">
+          <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
+            <Sparkles className="h-4 w-4" />
+            <span>AI類題生成</span>
           </div>
-        </header>
-        <main className="container mx-auto flex flex-1 flex-col items-center justify-center p-4">
-          <p>教授が選択されていません。</p>
-        </main>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">まず教授を選択してください</h1>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty mb-8">
+            学部・学科・科目・教授を選ぶと、その教授に紐づく過去問をベースに類題を生成できます。
+          </p>
+        </section>
+
+        <section className="container mx-auto px-4 pb-24 max-w-5xl">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-foreground mb-2">学部から教授を絞り込み</h2>
+            <p className="text-muted-foreground">閲覧・共有と同じ UI で選択できます。</p>
+          </div>
+
+          <FacultySelectionForm
+            value={selection}
+            onChange={setSelection}
+            onSubmit={handleSelectSubmit}
+            onInvalidSubmit={() => toast.error("学部・学科・科目・教授をすべて選択してください")}
+            submitLabel="この教授で類題作成"
+            buttonClassName="rounded-full"
+          />
+        </section>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col min-h-svh bg-background">
-      
-      {/* PDFの青いヘッダー */}
-      <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            href={step === 1 ? `/study/professor/${professorId}` : undefined}
-            onClick={step > 1 ? () => setStep(step - 1) : undefined}
-            className="hover:bg-primary/80"
-          >
-            <ChevronLeft className="h-6 w-6" />
-            <span className="sr-only">戻る</span>
-          </Button>
-          <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
-            類題作成
-          </h1>
-          <div></div>
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      {Header}
+
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 py-16 text-center">
+        <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
+          <Sparkles className="h-4 w-4" />
+          <span>AI類題生成</span>
         </div>
-      </header>
+        <h1 className="text-4xl md:text-6xl font-bold mb-4 text-balance">AIで類題を自動生成</h1>
+        {professor && (
+          <div className="flex items-center justify-center gap-3 text-muted-foreground text-sm md:text-base">
+            <span className="font-semibold text-foreground">{professor.name}</span>
+            <span>・</span>
+            <span>{subject?.name ?? "科目未設定"}</span>
+          </div>
+        )}
+        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty mb-8">
+          過去問をベースに、同じレベルの練習問題を瞬時に作成。あなたの学習をサポートします。
+        </p>
+      </section>
 
-      {/* メインコンテンツ */}
-      <main className="container mx-auto flex flex-1 flex-col justify-center p-4 py-8">
-        <div className="w-full max-w-md mx-auto space-y-8">
-          
-          {!hasApiKey && (
-            <Alert variant="destructive" className="rounded-2xl">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                AI機能を使用するには、設定画面でAPIキーを登録してください。
-                <Button variant="link" className="px-2" href="/settings">
-                  設定画面へ
-                </Button>
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {step === 1 && (
-            // ステップ1: 過去問選択 (PDFにないが必須機能)
-            <div className="space-y-6">
-              <div className="grid gap-2 text-center">
-                 <h2 className="text-xl font-semibold text-foreground">
-                  {professor?.name}
-                </h2>
-                <p className="text-lg text-muted-foreground">類題作成の元にする過去問を選んでください</p>
+      {/* Main Content */}
+      <section className="container mx-auto px-4 pb-24 max-w-6xl">
+        <div className="grid lg:grid-cols-2 gap-6">
+          {/* Input Card */}
+          <Card className="border-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-primary" />
+                元の問題を入力
+              </CardTitle>
+              <CardDescription>類題を生成したい問題文を入力してください</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="original-question">問題文</Label>
+                <Textarea
+                  id="original-question"
+                  placeholder="例：次の方程式を解きなさい。 x² - 5x + 6 = 0"
+                  className="min-h-[300px] resize-none"
+                  value={originalQuestion}
+                  onChange={(e) => setOriginalQuestion(e.target.value)}
+                />
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="exam" className="text-base font-semibold">過去問</Label>
-                <Select value={selectedExam} onValueChange={setSelectedExam} disabled={!hasApiKey}>
-                  <SelectTrigger id="exam" className="h-14 rounded-lg" size="lg">
-                    <SelectValue placeholder="過去問を選択" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {exams.map((exam) => (
-                      <SelectItem key={exam.id} value={exam.id}>
-                        {exam.title} {exam.year && `(${exam.year}年)`}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <Button onClick={() => setStep(2)} disabled={!selectedExam || !hasApiKey} className="w-full max-w-xs mx-auto flex">
-                次へ
+              <Button
+                onClick={handleGenerate}
+                disabled={isGenerating || !originalQuestion.trim()}
+                className="w-full"
+                size="lg"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    生成中...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    類題を生成
+                  </>
+                )}
               </Button>
-            </div>
-          )}
+            </CardContent>
+          </Card>
 
-          {step === 2 && (
-            // ステップ2: 確認 (PDF 9枚目)
-            <div className="flex flex-col items-center gap-10 text-center">
-              <h2 className="text-2xl font-bold text-foreground max-w-xs">
-                共有された過去問を元に類題を作成しますか？
-              </h2>
-              
-              <div className="p-4 bg-muted rounded-lg w-full">
-                <h4 className="font-semibold mb-2">選択された過去問</h4>
-                <p className="text-sm text-muted-foreground whitespace-pre-wrap line-clamp-4">
-                  {exams.find((e) => e.id === selectedExam)?.content}
-                </p>
-              </div>
-              
-              <Button onClick={handleGenerate} disabled={isLoading} className="w-full max-w-xs">
-                {isLoading ? "作成中..." : "作成する"}
-              </Button>
-            </div>
-          )}
-
-          {step === 3 && (
-            // ステップ3: 結果表示
-            <div className="space-y-6">
-              <div className="text-center">
-                <h2 className="text-2xl font-bold text-foreground flex items-center justify-center gap-2">
-                  <Sparkles className="h-6 w-6 text-primary" />
-                  生成された類題
-                </h2>
-                <p className="text-muted-foreground mt-2">AIが生成した類似問題です</p>
-              </div>
-
-              {isLoading && (
-                <div className="flex justify-center py-12">
-                  {/* スピナーやスケルトンをここに追加 */}
-                  <p>生成中...</p>
+          {/* Output Card */}
+          <Card className="border-2 bg-gradient-to-br from-card to-muted/20">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-primary" />
+                生成された類題
+              </CardTitle>
+              <CardDescription>AIが生成した練習問題</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isGenerating ? (
+                <div className="flex flex-col items-center justify-center py-12 space-y-4">
+                  <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                  <p className="text-sm text-muted-foreground">類題を生成中...</p>
                 </div>
-              )}
-
-              {error && (
-                <Alert variant="destructive" className="rounded-2xl">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-
-              {generatedContent && (
+              ) : generatedQuestions.length > 0 ? (
                 <div className="space-y-4">
-                  <Textarea
-                    value={generatedContent}
-                    readOnly
-                    rows={15}
-                    className="rounded-2xl bg-muted"
-                  />
-                  <p className="text-sm text-muted-foreground text-center">
-                    内容をコピーしてご自由にお使いください。
-                  </p>
+                  {generatedQuestions.map((question, index) => (
+                    <Card key={index} className="bg-background">
+                      <CardHeader>
+                        <CardTitle className="text-base">類題 {index + 1}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="whitespace-pre-wrap text-sm leading-relaxed">{question}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-12 space-y-4 text-center">
+                  <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
+                    <ArrowRight className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                  <div className="space-y-2">
+                    <p className="font-medium">類題がここに表示されます</p>
+                    <p className="text-sm text-muted-foreground">
+                      左側に問題を入力して、「類題を生成」ボタンをクリックしてください
+                    </p>
+                  </div>
                 </div>
               )}
-            </div>
-          )}
-
+            </CardContent>
+          </Card>
         </div>
-      </main>
+
+        {/* Features Section */}
+        <div className="mt-16 grid md:grid-cols-3 gap-6">
+          <Card>
+            <CardHeader>
+              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <Sparkles className="h-6 w-6 text-primary" />
+              </div>
+              <CardTitle className="text-lg">AI自動生成</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                OpenAI GPT-4を使用して、元の問題と同じレベルの類題を瞬時に生成します。
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <BookOpen className="h-6 w-6 text-primary" />
+              </div>
+              <CardTitle className="text-lg">学習効率UP</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                繰り返し練習することで、問題パターンを理解し、試験対策を効率化できます。
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <ArrowRight className="h-6 w-6 text-primary" />
+              </div>
+              <CardTitle className="text-lg">簡単操作</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                問題を入力してボタンを押すだけ。誰でも簡単に類題を生成できます。
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
     </div>
   )
 }

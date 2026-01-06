@@ -85,7 +85,7 @@ function CreateQuestionContent() {
     // ... エラー表示 (変更なし) ...
     return (
       <div className="flex flex-col min-h-svh bg-background">
-         <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
+         <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
           <div className="container mx-auto flex h-16 items-center justify-between px-4">
             <Button variant="ghost" size="icon" href="/home" className="hover:bg-primary/80">
               <ChevronLeft className="h-6 w-6" />
@@ -107,8 +107,8 @@ function CreateQuestionContent() {
   return (
     <div className="flex flex-col min-h-svh bg-background">
       
-      {/* PDFの青いヘッダー */}
-      <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
+      {/* PDFスタイルのヘッダー */}
+      <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Button variant="ghost" size="icon" href={examId ? `/exams/${examId}` : `/study/professor/${professorId}`} className="hover:bg-primary/80">
             <ChevronLeft className="h-6 w-6" />

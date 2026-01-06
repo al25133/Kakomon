@@ -45,7 +45,7 @@ export default function HomePage() {
               <Link href="/study/faculties" className="no-underline">閲覧</Link>
             </Button>
             <Button asChild size="lg" variant="secondary" className="w-2/5 min-w-[12rem] no-underline">
-              <Link href="/ruidaisakusei" className="no-underline">類題作成</Link>
+              <Link href="/exams/generate" className="no-underline">類題作成</Link>
             </Button>
           </div>
         </div>

@@ -1,68 +1,38 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
+import { FacultySelectionForm, emptyFacultySelection, isFacultySelectionComplete, type FacultySelectionValue } from "@/components/faculty-selection"
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Label } from "@/components/ui/label"
 import { ChevronLeft } from "lucide-react"
-import { getMockFaculties, getMockDepartments, getMockSubjects, getMockProfessors } from "@/lib/mock-data"
 import { useToast } from "@/hooks/use-toast"
 
 // 閲覧用の学部・学科選択を1ページで完結させる
 export default function FacultiesPage() {
   const { toast } = useToast()
-  const fixedWidthClass = "w-[33vw] min-w-[33vw] max-w-[33vw]"
+  const [selection, setSelection] = useState<FacultySelectionValue>(emptyFacultySelection)
 
-  const [selectedFaculty, setSelectedFaculty] = useState("")
-  const [selectedDepartment, setSelectedDepartment] = useState("")
-  const [selectedSubject, setSelectedSubject] = useState("")
-  const [selectedProfessor, setSelectedProfessor] = useState("")
+  const canProceed = isFacultySelectionComplete(selection)
+  const submitHref = canProceed ? `/study/professor/${selection.professorId}` : undefined
 
-  const faculties = getMockFaculties()
-  const departments = selectedFaculty ? getMockDepartments(selectedFaculty) : []
-  const subjects = selectedDepartment ? getMockSubjects(selectedDepartment) : []
-  const professors = selectedSubject ? getMockProfessors(selectedSubject) : []
-
-  // 上位が変わったら下位選択をリセット
-  useEffect(() => {
-    setSelectedDepartment("")
-    setSelectedSubject("")
-    setSelectedProfessor("")
-  }, [selectedFaculty])
-
-  useEffect(() => {
-    setSelectedSubject("")
-    setSelectedProfessor("")
-  }, [selectedDepartment])
-
-  useEffect(() => {
-    setSelectedProfessor("")
-  }, [selectedSubject])
-
-  const canProceed = Boolean(selectedFaculty && selectedDepartment && selectedSubject && selectedProfessor)
-
-  const handleNext = () => {
-    if (!canProceed) {
-      toast({
-        title: "選択が不足しています",
-        description: "学部・学科・科目・教授をすべて選択してください。",
-        variant: "destructive",
-      })
-    }
-  }
+  const handleInvalid = () =>
+    toast({
+      title: "選択が不足しています",
+      description: "学部・学科・科目・教授をすべて選択してください。",
+      variant: "destructive",
+    })
 
   return (
     <div className="flex flex-col min-h-svh bg-background">
       {/* ヘッダー */}
-      <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-10">
+      <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Button variant="ghost" size="icon" href="/home" className="hover:bg-primary/80">
             <ChevronLeft className="h-6 w-6" />
             <span className="sr-only">戻る</span>
           </Button>
           <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
-            閲覧設定
+            閲覧
           </h1>
           <div></div>
         </div>

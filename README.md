@@ -13,7 +13,7 @@ git clone https://github.com/al25133/Kakomon.git
 - 質問投稿（デモ）: `/questions/create` でフォーム入力後、2 秒待機のデモ挙動でリダイレクトするのみ（保存や API 連携なし）。
 - 過去問共有（デモ）: `/share` は 2 ステップでメタ情報と本文を入力し、完了後 `/auth/sign-up-success` に遷移するだけ。保存処理は未実装。
 - 類題生成: `/exams/generate?professor=...` で過去問を選び、ローカルに保存した OpenAI API キーを使って `/api/generate-similar` を呼び出し生成テキストを表示。
-- 追加の類題作成ページ: `/ruidaisakusei` からも `/api/generate-similar` を呼び出す簡易 UI を提供（同じ API キーが必要）。
+- 追加の類題作成ページ: `/exams/generate` から `/api/generate-similar` を呼び出す簡易 UI を提供（同じ API キーが必要）。
 - 設定: `/settings` で OpenAI API キーを入力し `localStorage` に保存。プロフィール項目はモックユーザー表示のみで編集不可。
 - アカウント: `/account` にモックユーザーの情報と投稿数（モックから集計）を表示。`/api/auth/logout` はログアウト処理を持たず、ログイン画面へリダイレクトするだけ。
 - 認証画面: `/auth/login`・`/auth/sign-up` はフロント側のバリデーションとダミー待機のみで、認証基盤との連携はありません。
@@ -97,3 +97,10 @@ npm start        # または pnpm build && pnpm start
 - `app/exams/[id]/page.tsx`・`app/study/professor/[id]/page.tsx` は `generateStaticParams` を使ってモックデータから静的パスを生成。
 - 類題生成や質問投稿などのフォームはデモ用のため、サーバー永続化や認証は別途実装が必要です。
 
+---
+
+## todoリスト
+
+- apiキーの暗号化
+- 過去問を直接アップロードするのではなく、一部をaiに食わせて改変する
+- pdfのアップロード機能の追加
