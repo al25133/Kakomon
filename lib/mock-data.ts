@@ -124,7 +124,7 @@ export const mockExams = [
     semester: "前期",
     exam_type: "中間試験",
     content:
-      "/linear_algebra_2024_first_midterm.tex.pdf",
+      "/linear_algebra_2024_first_midterm.pdf",
     user_id: "mock-user-1",
     created_at: new Date("2024-07-10").toISOString(),
   },

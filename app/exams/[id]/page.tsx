@@ -54,10 +54,19 @@ export default async function ExamDetailPage({
           {/* PDF 6枚目: 画像(過去問)表示エリア */}
           <div className="w-full bg-muted rounded-2xl p-4 min-h-[50vh] flex flex-col">
             <h2 className="text-lg font-semibold mb-4">{exam.title}</h2>
-            <p className="whitespace-pre-wrap text-foreground flex-1">
-              {exam.content}
-            </p>
-            {/* デモなのでテキスト表示。PDFでは画像表示エリア */}
+            {/* PDF の場合は埋め込み、それ以外はテキスト表示 */}
+            {typeof exam.content === "string" && exam.content.toLowerCase().includes(".pdf") ? (
+              <div className="flex-1">
+                <iframe
+                  src={exam.content}
+                  title={exam.title || "exam-pdf"}
+                  style={{ width: "100%", height: "60vh", border: 0 }}
+                  className="rounded-md"
+                />
+              </div>
+            ) : (
+              <p className="whitespace-pre-wrap text-foreground flex-1">{exam.content}</p>
+            )}
           </div>
 
           {/* PDF 6枚目: 質問するボタン */}
