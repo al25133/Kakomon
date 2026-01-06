@@ -22,6 +22,8 @@ export default function FacultiesPage() {
       variant: "destructive",
     })
 
+  const fixedWidthClass = "w-full max-w-[520px] md:w-[33vw]"
+
   return (
     <div className="flex flex-col min-h-svh bg-background">
       {/* ヘッダー */}
@@ -40,84 +42,16 @@ export default function FacultiesPage() {
 
       {/* メインコンテンツ */}
       <main className="container mx-auto flex flex-1 flex-col p-4 py-8">
-        <div className="w-full mx-auto space-y-8 py-4 flex flex-col items-center">
-          <div className={`space-y-8 ${fixedWidthClass}`}>
-            <div className="grid gap-2">
-              <Label htmlFor="faculty" className="text-base font-semibold">学部・専攻</Label>
-              <Select value={selectedFaculty} onValueChange={setSelectedFaculty}>
-                <SelectTrigger id="faculty" className="h-14 rounded-full">
-                  <SelectValue placeholder="学部を選択" />
-                </SelectTrigger>
-                <SelectContent>
-                  {faculties.map((faculty) => (
-                    <SelectItem key={faculty.id} value={faculty.id}>
-                      {faculty.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="department" className="text-base font-semibold">学科・コース</Label>
-              <Select value={selectedDepartment} onValueChange={setSelectedDepartment} disabled={!selectedFaculty}>
-                <SelectTrigger id="department" className="h-14 rounded-full">
-                  <SelectValue placeholder="学科を選択" />
-                </SelectTrigger>
-                <SelectContent>
-                  {departments.map((department) => (
-                    <SelectItem key={department.id} value={department.id}>
-                      {department.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="subject" className="text-base font-semibold">科目</Label>
-              <Select value={selectedSubject} onValueChange={setSelectedSubject} disabled={!selectedDepartment}>
-                <SelectTrigger id="subject" className="h-14 rounded-full">
-                  <SelectValue placeholder="科目を選択" />
-                </SelectTrigger>
-                <SelectContent>
-                  {subjects.map((subject) => (
-                    <SelectItem key={subject.id} value={subject.id}>
-                      {subject.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="professor" className="text-base font-semibold">教授</Label>
-              <Select value={selectedProfessor} onValueChange={setSelectedProfessor} disabled={!selectedSubject}>
-                <SelectTrigger id="professor" className="h-14 rounded-full">
-                  <SelectValue placeholder="教授を選択" />
-                </SelectTrigger>
-                <SelectContent>
-                  {professors.map((professor) => (
-                    <SelectItem key={professor.id} value={professor.id}>
-                      {professor.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="flex justify-center w-full">
-                  <Button
-                    href={canProceed ? `/exams/view?professor=${selectedProfessor}` : undefined}
-                    onClick={!canProceed ? handleNext : undefined}
-                    className={`${fixedWidthClass} no-underline`}
-                    size="default"
-                  >
-                    次へ
-                  </Button>
-          </div>
-        </div>
+        <FacultySelectionForm
+          value={selection}
+          onChange={setSelection}
+          onInvalidSubmit={handleInvalid}
+          submitHref={submitHref}
+          widthClassName={fixedWidthClass}
+          className="flex-1"
+          triggerClassName="h-14 rounded-full"
+          buttonClassName="rounded-full"
+        />
       </main>
     </div>
   )
