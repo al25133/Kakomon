@@ -37,10 +37,10 @@ function ViewExamsContent() {
             </h1>
             <p className="text-sm opacity-90">{professorData?.name}</p>
           </div>
-          <Button variant="ghost" size="icon" href="/share" className="hover:bg-primary/80">
+          {/* <Button variant="ghost" size="icon" href="/share" className="hover:bg-primary/80">
             <Plus className="h-6 w-6" />
             <span className="sr-only">過去問を共有</span>
-          </Button>
+          </Button> */}
         </div>
       </header>
 
