@@ -13,7 +13,7 @@ export default function FacultiesPage() {
   const [selection, setSelection] = useState<FacultySelectionValue>(emptyFacultySelection)
 
   const canProceed = isFacultySelectionComplete(selection)
-  const submitHref = canProceed ? `/study/professor/${selection.professorId}` : undefined
+  const submitHref = canProceed ? `/exams/view?professor=${selection.professorId}` : undefined
 
   const handleInvalid = () =>
     toast({
