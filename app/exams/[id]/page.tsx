@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { HeaderBackButton } from "@/components/ui/header-back-button"
  
 import { ChevronLeft } from "lucide-react"
 import { getMockExamById, getMockProfessorById, getMockQuestions, mockExams } from "@/lib/mock-data"
@@ -33,10 +34,10 @@ export default async function ExamDetailPage({
       {/* PDFのヘッダー */}
       <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" href={`/exams/view?professor=${exam.professor_id}`} className="hover:bg-primary/80">
+          <HeaderBackButton href={`/exams/view?professor=${exam.professor_id}`}>
             <ChevronLeft className="h-6 w-6" />
             <span className="sr-only">戻る</span>
-          </Button>
+          </HeaderBackButton>
           <div className="text-center absolute left-1/2 -translate-x-1/2">
             <h1 className="text-xl font-bold">
               {exam.year ? `${exam.year}年度` : exam.title}

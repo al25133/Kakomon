@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { Button } from "@/components/ui/button"
+import { HeaderBackButton } from "@/components/ui/header-back-button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -87,10 +88,10 @@ function CreateQuestionContent() {
       <div className="flex flex-col min-h-svh bg-background">
          <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
           <div className="container mx-auto flex h-16 items-center justify-between px-4">
-            <Button variant="ghost" size="icon" href="/home" className="hover:bg-primary/80">
+            <HeaderBackButton href="/home">
               <ChevronLeft className="h-6 w-6" />
               <span className="sr-only">戻る</span>
-            </Button>
+            </HeaderBackButton>
             <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
               エラー
             </h1>
@@ -110,10 +111,10 @@ function CreateQuestionContent() {
       {/* PDFスタイルのヘッダー */}
       <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" href={examId ? `/exams/${examId}` : `/study/professor/${professorId}`} className="hover:bg-primary/80">
+          <HeaderBackButton href={examId ? `/exams/${examId}` : `/study/professor/${professorId}`}>
             <ChevronLeft className="h-6 w-6" />
             <span className="sr-only">戻る</span>
-          </Button>
+          </HeaderBackButton>
           <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
             質問する
           </h1>
