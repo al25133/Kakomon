@@ -9,10 +9,12 @@ export async function POST(request: Request) {
     }
 
     if (!apiKey) {
-      return NextResponse.json({ error: "APIキーが設定されていません。設定画面で登録してください。" }, { status: 400 })
+      return NextResponse.json(
+        { error: "APIキーが設定されていません。設定画面で登録してください。" },
+        { status: 400 }
+      )
     }
 
-    // OpenAI APIを使用して類題を生成
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -38,16 +40,16 @@ export async function POST(request: Request) {
     })
 
     if (!response.ok) {
-      const errorData = await response.json()
-      console.error("OpenAI API Error:", errorData)
+      const errorText = await response.text() // ← jsonじゃない時もあるので text が安全
+      console.error("OpenAI API Error:", errorText)
       return NextResponse.json(
         { error: "AI APIの呼び出しに失敗しました。APIキーを確認してください。" },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
     const data = await response.json()
-    const content = data.choices[0]?.message?.content
+    const content = data.choices?.[0]?.message?.content
 
     if (!content) {
       return NextResponse.json({ error: "類題の生成に失敗しました" }, { status: 500 })
