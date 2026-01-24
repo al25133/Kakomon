@@ -32,8 +32,8 @@ export default function SignUpSuccessPage() {
             メール内のリンクをクリックしてアカウントを有効化してください。
           </p>
           
-          <Button className="w-full max-w-xs" size="default" href="/auth/login">
-            ログイン画面へ
+          <Button className="w-full max-w-xs" size="default" href="/home">
+            ホーム画面へ
           </Button>
         </div>
       </main>
