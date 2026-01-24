@@ -3,6 +3,7 @@
 import type React from "react"
 import { FacultySelectionForm, emptyFacultySelection, isFacultySelectionComplete, type FacultySelectionValue } from "@/components/faculty-selection"
 import { Button } from "@/components/ui/button"
+import { HeaderBackButton } from "@/components/ui/header-back-button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -76,16 +77,13 @@ export default function SharePage() {
       {/* PDFのヘッダー (戻るボタン付き) */}
       <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-20 items-center justify-between px-4">
-          <Button
-            variant="ghost"
-            size="icon"
+          <HeaderBackButton
             href={step === 1 ? "/home" : undefined}
             onClick={step === 2 ? () => setStep(1) : undefined}
-            className="hover:bg-primary/80"
           >
             <ChevronLeft className="h-6 w-6" />
             <span className="sr-only">戻る</span>
-          </Button>
+          </HeaderBackButton>
           <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
             過去問共有
           </h1>

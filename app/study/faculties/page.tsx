@@ -3,7 +3,7 @@
 import { useState } from "react"
 
 import { FacultySelectionForm, emptyFacultySelection, isFacultySelectionComplete, type FacultySelectionValue } from "@/components/faculty-selection"
-import { Button } from "@/components/ui/button"
+import { HeaderBackButton } from "@/components/ui/header-back-button"
 import { ChevronLeft } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
@@ -29,10 +29,10 @@ export default function FacultiesPage() {
       {/* ヘッダー */}
       <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" href="/home" className="hover:bg-primary/80">
+          <HeaderBackButton href="/home">
             <ChevronLeft className="h-6 w-6" />
             <span className="sr-only">戻る</span>
-          </Button>
+          </HeaderBackButton>
           <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
             閲覧
           </h1>

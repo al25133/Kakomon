@@ -2,6 +2,7 @@
 import { Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { HeaderBackButton } from "@/components/ui/header-back-button"
 import { ChevronLeft, Plus } from "lucide-react"
 import { getMockProfessorById, getMockExams, getMockSubjectById } from "@/lib/mock-data"
 
@@ -27,10 +28,10 @@ function ViewExamsContent() {
       {/* PDFのヘッダー */}
       <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-20 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" href={`/study/faculties`} className="hover:bg-primary/80">
+          <HeaderBackButton href={`/study/faculties`}>
             <ChevronLeft className="h-6 w-6" />
             <span className="sr-only">戻る</span>
-          </Button>
+          </HeaderBackButton>
           <div className="text-center absolute left-1/2 -translate-x-1/2">
             <h1 className="text-xl font-bold">
               {subject?.name}

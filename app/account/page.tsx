@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { HeaderBackButton } from "@/components/ui/header-back-button"
 import { Separator } from "@/components/ui/separator"
  
 import { ChevronLeft, User, Mail, Calendar, Settings, LogOut } from "lucide-react"
@@ -15,10 +16,10 @@ export default function AccountPage() {
       {/* PDFのヘッダーデザインを再現 */}
       <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Button variant="ghost" size="icon" href="/home" className="hover:bg-primary/80">
+          <HeaderBackButton href="/home">
             <ChevronLeft className="h-6 w-6" />
             <span className="sr-only">戻る</span>
-          </Button>
+          </HeaderBackButton>
           <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2">
             アカウント
           </h1>
