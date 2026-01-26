@@ -1,7 +1,7 @@
 git clone https://github.com/al25133/Kakomon.git
 ## Kakomon - 過去問共有デモ
 
-芝浦工業大学の過去問をモックデータで閲覧・共有し、OpenAI API を使った簡易な類題生成を試せる Next.js 16 デモアプリです。バックエンドや永続化は未実装で、`lib/mock-data.ts` の配列とブラウザの `localStorage` だけで動作します。
+芝浦工業大学の過去問をモックデータで閲覧・共有し、OpenAI API を使った簡易な類題生成を試せる Next.js デモアプリです。モックデータと一部の簡易 API（PDF アップロード、類題生成 API）で動作します。DB や本格的な認証は未実装で、永続化は限定的です。
 
 ---
 
@@ -24,14 +24,14 @@ git clone https://github.com/al25133/Kakomon.git
 
 | 領域 | 技術 | バージョン |
 | --- | --- | --- |
-| フレームワーク | Next.js | 16.0.10 |
+| フレームワーク | Next.js | ^16.1.4 |
 | UI | React | 19.2.3 |
 | 言語 | TypeScript | ^5 |
 | スタイリング | Tailwind CSS | ^4.1.18 |
 | コンポーネント | shadcn/ui (Radix UI ベース) | - |
-| フォーム | react-hook-form | ^7.68.0 |
-| バリデーション | zod | 4.1.13 |
-| グラフ/通知 | recharts, sonner | 3.5.1 / ^2.0.7 |
+| フォーム | react-hook-form | ^7.71.1 |
+| バリデーション | zod | 4.3.6 |
+| グラフ/通知 | recharts, sonner | 3.7.0 / ^2.0.7 |
 
 ---
 
@@ -39,7 +39,7 @@ git clone https://github.com/al25133/Kakomon.git
 
 - データソースは `lib/mock-data.ts` のモック配列のみ。DB や API への保存はありません。
 - OpenAI API キーはブラウザの `localStorage` に保存し、サーバーには送信しません（`openai_api_key`）。
-- ファイルアップロードや PDF 表示は未実装で、過去問本文はすべてテキスト表示。
+ - ただし、簡易的な PDF アップロード API (`POST /api/upload`) を実装しており、受け取った PDF は `public/uploads` に保存されます（静的ファイルとして参照可能）。一部の画面はローカルプレビューを用いるため、UI 側でアップロード API を呼ばない場合もあります。
 - 認証・セッション管理は実装されておらず、ログイン/登録はデモ挙動です。
 
 ---
@@ -57,6 +57,8 @@ cd Kakomon
 npm install      # または pnpm install
 npm run dev      # または pnpm dev
 ```
+
+(注) 上記のうち「pdfのアップロード機能の追加」はサーバー側 API は追加済みですが、運用面（認証・検査）の強化が必要です。
 
 `http://localhost:3000` にアクセスすると `/home` にリダイレクトされます。
 
@@ -86,6 +88,11 @@ npm start        # または pnpm build && pnpm start
 	- モデル: `gpt-4o-mini`
 	- レスポンス: `{ content: string }`（生成された類題テキスト）。失敗時はエラーメッセージを返却。
 
+- `POST /api/upload`
+	- リクエスト: FormData（`file` フィールドに `application/pdf`）
+	- 動作: 受信した PDF を `public/uploads` 配下に保存し、公開 URL を返却します（例: `/uploads/<safe-name>`）。
+	- 備考: 現在は PDF のみ許可。アップロード時の認証やマルウェアチェック等は未実装です。
+
 - `POST /api/auth/logout`
 	- セッション処理なしで `/auth/login` にリダイレクト。
 
@@ -93,14 +100,23 @@ npm start        # または pnpm build && pnpm start
 
 ## 開発用メモ
 
+## 新機能（最近の追加）
+
+- PDF アップロード API を追加: `app/api/upload/route.ts` によりクライアントから PDF を受け取り、`public/uploads` に保存します。
+- PDF のクライアントプレビュー: `/exams/generate` などで選択した PDF をローカルプレビューで埋め込み表示できます。
+- 類題生成の API 実装: `app/api/generate-similar/route.ts` で `gpt-4o-mini` を使った類題生成を行います。
+
+## 今後の展望 / Roadmap
+
+- API キーの安全な保存・暗号化（サーバー側保管、Vault 等の導入）。
+- 認証とユーザー管理（永続化されたアカウント、投稿の所有権）。
+- 過去問の永続化（データベース導入）と管理画面。
+- PDF のテキスト抽出・OCR、問題の自動パースとメタデータ抽出。
+- CI / CD の整備（GitHub Actions ワークフロー更新、Node バージョン固定など）。
+- アクセス制御やウイルススキャンを含むアップロードの強化。
+
 - 主要モック取得関数: `getMockFaculties`, `getMockDepartments`, `getMockSubjects`, `getMockProfessors`, `getMockExams`, `getMockQuestions` など。
 - `app/exams/[id]/page.tsx`・`app/study/professor/[id]/page.tsx` は `generateStaticParams` を使ってモックデータから静的パスを生成。
 - 類題生成や質問投稿などのフォームはデモ用のため、サーバー永続化や認証は別途実装が必要です。
 
 ---
-
-## todoリスト
-
-- apiキーの暗号化
-- 過去問を直接アップロードするのではなく、一部をaiに食わせて改変する
-- pdfのアップロード機能の追加
