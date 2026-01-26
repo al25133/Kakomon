@@ -43,6 +43,19 @@ function CreateQuestionContent() {
     }
   }, [professorId, examId])
 
+  // uploadedUrl が変わるたびに前の Object URL を解放する
+  useEffect(() => {
+    return () => {
+      if (uploadedUrl) {
+        try {
+          URL.revokeObjectURL(uploadedUrl)
+        } catch (e) {
+          // ignore
+        }
+      }
+    }
+  }, [uploadedUrl])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -198,46 +211,63 @@ function CreateQuestionContent() {
             <div className="grid gap-2">
               <Label className="text-base font-semibold">参考PDF（任意）</Label>
               <div className="flex items-center gap-3">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="application/pdf"
-                  onChange={async (e) => {
-                    const f = e.target.files?.[0] || null
-                    if (!f) return
-                    setFile(f)
-                    setUploading(true)
-                    try {
-                      const fd = new FormData()
-                      fd.append("file", f)
-                      const res = await fetch("/api/upload", { method: "POST", body: fd })
-                      const data = await res.json()
-                      if (!res.ok) {
-                        alert(data?.error || "アップロードに失敗しました")
-                        setFile(null)
-                        setUploadedUrl("")
-                      } else {
-                        setUploadedUrl(data.url || "")
-                      }
-                    } catch (err) {
-                      alert("アップロードエラー")
-                      setFile(null)
-                      setUploadedUrl("")
-                    } finally {
+                <div className="flex flex-col gap-2 w-full">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="application/pdf"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0] || null
+                      if (!f) return
+                      setFile(f)
+                      const url = URL.createObjectURL(f)
+                      setUploadedUrl(url)
                       setUploading(false)
-                    }
-                  }}
-                  className="w-full"
-                />
-                {uploading ? (
-                  <div className="text-sm text-muted-foreground">アップロード中…</div>
-                ) : uploadedUrl ? (
-                  <a href={uploadedUrl} target="_blank" rel="noreferrer" className="text-sm text-primary underline">
-                    アップロード済みPDFを表示
-                  </a>
-                ) : file ? (
-                  <div className="text-sm">{file.name}</div>
-                ) : null}
+                    }}
+                    className="hidden"
+                  />
+
+                  <div className="flex items-center gap-3">
+                    <Button type="button" onClick={() => fileInputRef.current?.click()} className="px-3 py-2">
+                      ファイルを選択
+                    </Button>
+
+                    {uploadedUrl ? (
+                      <>
+                        <a href={uploadedUrl} target="_blank" rel="noreferrer" className="text-sm text-primary underline">
+                          プレビューを新しいタブで開く
+                        </a>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            try {
+                              if (uploadedUrl) URL.revokeObjectURL(uploadedUrl)
+                            } catch (e) {}
+                            setUploadedUrl("")
+                            setFile(null)
+                            if (fileInputRef.current) fileInputRef.current.value = ""
+                          }}
+                          className="text-sm text-destructive underline"
+                        >
+                          削除
+                        </button>
+                      </>
+                    ) : file ? (
+                      <div className="text-sm">{file.name}</div>
+                    ) : (
+                      <div className="text-sm text-muted-foreground">未選択</div>
+                    )}
+                  </div>
+
+                  {uploadedUrl && (
+                    <div className="mt-4">
+                      <div className="text-sm font-semibold mb-2">埋め込みプレビュー</div>
+                      <div className="w-full h-96 border rounded overflow-hidden">
+                        <iframe src={uploadedUrl} className="w-full h-full" title="PDFプレビュー" />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

@@ -1,16 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { FacultySelectionForm, emptyFacultySelection, isFacultySelectionComplete, type FacultySelectionValue } from "@/components/faculty-selection"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, Sparkles, ArrowRight, BookOpen } from "lucide-react"
+import { Loader2, Sparkles, ArrowRight, BookOpen, Copy } from "lucide-react"
 import { HeaderBackButton } from "@/components/ui/header-back-button"
 import { toast } from "sonner"
 import { useRouter, useSearchParams } from "next/navigation"
-import { getMockProfessorById, getMockSubjectById } from "@/lib/mock-data"
+import { getMockProfessorById, getMockSubjectById, getMockExams } from "@/lib/mock-data"
 
 export default function GenerateSimilarQuestionsPage() {
   const router = useRouter()
@@ -24,6 +24,11 @@ export default function GenerateSimilarQuestionsPage() {
   const [originalQuestion, setOriginalQuestion] = useState("")
   const [generatedQuestions, setGeneratedQuestions] = useState<string[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
+  const [availableExams, setAvailableExams] = useState(() => (professorId ? getMockExams(professorId) : []))
+  const [selectedImportExamId, setSelectedImportExamId] = useState("")
+  const [file, setFile] = useState<File | null>(null)
+  const [uploadedUrl, setUploadedUrl] = useState("")
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const hasProfessor = Boolean(professorId)
 
@@ -75,18 +80,75 @@ export default function GenerateSimilarQuestionsPage() {
     }
   }
 
+  const handleCopy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      toast.success("クリップボードにコピーしました")
+    } catch (e) {
+      toast.error("コピーに失敗しました")
+    }
+  }
+
+  // Object URL のクリーンアップ
+  useEffect(() => {
+    return () => {
+      if (uploadedUrl) {
+        try {
+          URL.revokeObjectURL(uploadedUrl)
+        } catch (e) {}
+      }
+    }
+  }, [uploadedUrl])
+
+  useEffect(() => {
+    if (professorId) setAvailableExams(getMockExams(professorId))
+    else setAvailableExams([])
+  }, [professorId])
+
+  const handleImportFromExam = () => {
+    if (!selectedImportExamId) {
+      toast.error("インポートする過去問を選択してください")
+      return
+    }
+    const ex = availableExams.find((e) => e.id === selectedImportExamId)
+    if (!ex) {
+      toast.error("過去問が見つかりません")
+      return
+    }
+
+    // content が PDF パスのような場合は埋め込み表示、それ以外は問題文として挿入
+    if (ex.content && typeof ex.content === "string" && ex.content.trim().startsWith("/")) {
+      // assume static file path under public/
+      try {
+        if (uploadedUrl) URL.revokeObjectURL(uploadedUrl)
+      } catch (e) {}
+      setUploadedUrl(ex.content)
+      setFile(null)
+    } else {
+      setOriginalQuestion(ex.content || "")
+    }
+
+    toast.success("過去問をインポートしました")
+  }
+
   const Header = (
-    <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
+    <header className="bg-background text-foreground shadow sticky top-0 z-10">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div>
-          {/* 戻るボタンは教授が選択されている場合はその教授のビューへ、それ以外はホームへ */}
-          <HeaderBackButton href={hasProfessor ? `/exams/view?professor=${professorId}` : `/home`} />
+          {/* 戻るボタン: 教授クエリがある場合は /exams/generate に戻す、それ以外はホームへ */}
+          <HeaderBackButton href={hasProfessor ? `/exams/generate` : `/home`} />
         </div>
 
         <div className="text-center absolute left-1/2 -translate-x-1/2">
           <h1 className="text-lg font-bold">AI類題生成</h1>
           {professor && (
-            <p className="text-sm opacity-90">{professor.name} ・ {subject?.name ?? "科目未設定"}</p>
+            <div className="flex flex-col items-center">
+              <p className="text-sm opacity-90">{professor.name} ・ {subject?.name ?? "科目未設定"}</p>
+              <div className="mt-1 flex gap-2">
+                <div className="px-2 py-1 rounded-full bg-muted/60 text-sm">{subject?.name ?? "科目未設定"}</div>
+                <div className="px-2 py-1 rounded-full bg-muted/60 text-sm">{professor.name}</div>
+              </div>
+            </div>
           )}
         </div>
 
@@ -101,21 +163,11 @@ export default function GenerateSimilarQuestionsPage() {
         {Header}
 
         <section className="container mx-auto px-4 py-16 text-center">
-          <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
-            <Sparkles className="h-4 w-4" />
-            <span>AI類題生成</span>
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">まず教授を選択してください</h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty mb-8">
-            学部・学科・科目・教授を選ぶと、その教授に紐づく過去問をベースに類題を生成できます。
-          </p>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">教授選択</h1>
         </section>
 
         <section className="container mx-auto px-4 pb-24 max-w-5xl">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-foreground mb-2">学部から教授を絞り込み</h2>
-            <p className="text-muted-foreground">閲覧・共有と同じ UI で選択できます。</p>
-          </div>
+
 
           <FacultySelectionForm
             value={selection}
@@ -134,24 +186,12 @@ export default function GenerateSimilarQuestionsPage() {
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       {Header}
 
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 py-16 text-center">
-        <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
-          <Sparkles className="h-4 w-4" />
-          <span>AI類題生成</span>
-        </div>
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 text-balance">AIで類題を自動生成</h1>
-        {/* ヘッダーに教授情報を表示しているため、ここでは省略してシンプルにする */}
-        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty mb-8">
-          過去問をベースに、同じレベルの練習問題を瞬時に作成。あなたの学習をサポートします。
-        </p>
-      </section>
 
       {/* Main Content */}
       <section className="container mx-auto px-4 pb-24 max-w-6xl">
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Input Card */}
-          <Card className="border-2">
+          <Card className="rounded-lg border-2 shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BookOpen className="h-5 w-5 text-primary" />
@@ -169,6 +209,85 @@ export default function GenerateSimilarQuestionsPage() {
                   value={originalQuestion}
                   onChange={(e) => setOriginalQuestion(e.target.value)}
                 />
+                <div className="text-sm text-muted-foreground text-right">{originalQuestion.length}文字</div>
+              </div>
+              {/* 過去問からインポート */}
+              <div className="grid gap-2">
+                <Label className="text-base font-semibold">過去問からインポート（任意）</Label>
+                <div className="flex items-center gap-2">
+                  <select
+                    value={selectedImportExamId}
+                    onChange={(e) => setSelectedImportExamId(e.target.value)}
+                    className="rounded-md border px-2 py-1 text-sm"
+                  >
+                    <option value="">過去問を選択</option>
+                    {availableExams.map((ex) => (
+                      <option key={ex.id} value={ex.id}>
+                        {ex.title}{ex.year ? ` (${ex.year}年)` : ""}
+                      </option>
+                    ))}
+                  </select>
+                  <Button type="button" onClick={handleImportFromExam} size="sm">
+                    インポート
+                  </Button>
+                </div>
+              </div>
+              {/* PDF アップロード（ローカルプレビュー） */}
+              <div className="grid gap-2">
+                <Label className="text-base font-semibold">参考PDF（任意）</Label>
+                <div className="flex flex-col gap-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="application/pdf"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0] || null
+                      if (!f) return
+                      setFile(f)
+                      const url = URL.createObjectURL(f)
+                      setUploadedUrl(url)
+                    }}
+                    className="hidden"
+                  />
+
+                  <div className="flex items-center gap-3">
+                    <Button type="button" onClick={() => fileInputRef.current?.click()} size="sm">
+                      ファイルを選択
+                    </Button>
+                    {uploadedUrl ? (
+                      <>
+                        <a href={uploadedUrl} target="_blank" rel="noreferrer" className="text-sm text-primary underline">
+                          新しいタブでプレビュー
+                        </a>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            try { if (uploadedUrl) URL.revokeObjectURL(uploadedUrl) } catch (e) {}
+                            setUploadedUrl("")
+                            setFile(null)
+                            if (fileInputRef.current) fileInputRef.current.value = ""
+                          }}
+                          className="text-sm text-destructive underline"
+                        >
+                          削除
+                        </button>
+                      </>
+                    ) : file ? (
+                      <div className="text-sm">{file.name}</div>
+                    ) : (
+                      <div className="text-sm text-muted-foreground">未選択</div>
+                    )}
+                  </div>
+
+                  {uploadedUrl && (
+                    <div className="mt-2">
+                      <div className="text-sm font-semibold mb-2">埋め込みプレビュー</div>
+                      <div className="w-full h-64 border rounded overflow-hidden">
+                        <iframe src={uploadedUrl} className="w-full h-full" title="PDFプレビュー" />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
               <Button
                 onClick={handleGenerate}
@@ -192,7 +311,7 @@ export default function GenerateSimilarQuestionsPage() {
           </Card>
 
           {/* Output Card */}
-          <Card className="border-2 bg-gradient-to-br from-card to-muted/20">
+          <Card className="rounded-lg border-2 bg-gradient-to-br from-card to-muted/20 shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
@@ -209,12 +328,18 @@ export default function GenerateSimilarQuestionsPage() {
               ) : generatedQuestions.length > 0 ? (
                 <div className="space-y-4">
                   {generatedQuestions.map((question, index) => (
-                    <Card key={index} className="bg-background">
+                    <Card key={index} className="bg-background rounded-md border">
                       <CardHeader>
                         <CardTitle className="text-base">類題 {index + 1}</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <p className="whitespace-pre-wrap text-sm leading-relaxed">{question}</p>
+                        <div className="mt-4 flex justify-end gap-2">
+                          <Button size="sm" onClick={() => handleCopy(question)} className="flex items-center gap-2">
+                            <Copy className="h-4 w-4" />
+                            コピー
+                          </Button>
+                        </div>
                       </CardContent>
                     </Card>
                   ))}
