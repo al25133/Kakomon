@@ -12,6 +12,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useEffect, Suspense } from "react"
 import { ChevronLeft } from "lucide-react"
 import { getMockExams, getMockExamById, getMockProfessorById } from "@/lib/mock-data"
+import { useRef } from "react"
 
 // PDFのデザイン言語 (フォーム) を適用
 function CreateQuestionContent() {
@@ -26,6 +27,10 @@ function CreateQuestionContent() {
   const [selectedExam, setSelectedExam] = useState(examId || "")
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
+  const [file, setFile] = useState<File | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const [uploadedUrl, setUploadedUrl] = useState("")
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
@@ -65,6 +70,9 @@ function CreateQuestionContent() {
       
       // デモ用：2秒待機
       await new Promise(resolve => setTimeout(resolve, 2000))
+
+      // ここで uploadedUrl を送ることができます (現状はデモなので送信しない)
+      // 例: await fetch('/api/questions', { method: 'POST', body: JSON.stringify({ title, content, uploadedUrl }) })
       
       if (selectedExam) {
         router.push(`/exams/${selectedExam}`)
@@ -184,6 +192,53 @@ function CreateQuestionContent() {
                 rows={8}
                 className="rounded-2xl"
               />
+            </div>
+
+            {/* PDF アップロード */}
+            <div className="grid gap-2">
+              <Label className="text-base font-semibold">参考PDF（任意）</Label>
+              <div className="flex items-center gap-3">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="application/pdf"
+                  onChange={async (e) => {
+                    const f = e.target.files?.[0] || null
+                    if (!f) return
+                    setFile(f)
+                    setUploading(true)
+                    try {
+                      const fd = new FormData()
+                      fd.append("file", f)
+                      const res = await fetch("/api/upload", { method: "POST", body: fd })
+                      const data = await res.json()
+                      if (!res.ok) {
+                        alert(data?.error || "アップロードに失敗しました")
+                        setFile(null)
+                        setUploadedUrl("")
+                      } else {
+                        setUploadedUrl(data.url || "")
+                      }
+                    } catch (err) {
+                      alert("アップロードエラー")
+                      setFile(null)
+                      setUploadedUrl("")
+                    } finally {
+                      setUploading(false)
+                    }
+                  }}
+                  className="w-full"
+                />
+                {uploading ? (
+                  <div className="text-sm text-muted-foreground">アップロード中…</div>
+                ) : uploadedUrl ? (
+                  <a href={uploadedUrl} target="_blank" rel="noreferrer" className="text-sm text-primary underline">
+                    アップロード済みPDFを表示
+                  </a>
+                ) : file ? (
+                  <div className="text-sm">{file.name}</div>
+                ) : null}
+              </div>
             </div>
           </div>
 

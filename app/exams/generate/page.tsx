@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, Sparkles, BookOpen, ArrowRight } from "lucide-react"
+import { Loader2, Sparkles, ChevronLeft, ArrowRight, BookOpen } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter, useSearchParams } from "next/navigation"
 import { getMockProfessorById, getMockSubjectById } from "@/lib/mock-data"
@@ -75,26 +75,27 @@ export default function GenerateSimilarQuestionsPage() {
   }
 
   const Header = (
-    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <BookOpen className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-bold">Kakomon</h1>
-        </div>
-        <nav className="flex items-center gap-6">
-          <a href="/home" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            ホーム
-          </a>
+    <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <div>
+          {/* 戻るボタンは教授が選択されている場合はその教授のビューへ、それ以外は学部一覧へ */}
           <a
-            href="/study/faculties"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            href={hasProfessor ? `/exams/view?professor=${professorId}` : `/study/faculties`}
+            className="inline-flex items-center justify-center h-10 w-10 rounded-md text-foreground hover:bg-muted/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
-            過去問閲覧
+            <ChevronLeft className="h-5 w-5" />
+            <span className="sr-only">戻る</span>
           </a>
-          <a href="/settings" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            設定
-          </a>
-        </nav>
+        </div>
+
+        <div className="text-center absolute left-1/2 -translate-x-1/2">
+          <h1 className="text-lg font-bold">AI類題生成</h1>
+          {professor && (
+            <p className="text-sm opacity-90">{professor.name} ・ {subject?.name ?? "科目未設定"}</p>
+          )}
+        </div>
+
+        <div className="w-10" />
       </div>
     </header>
   )
@@ -145,13 +146,7 @@ export default function GenerateSimilarQuestionsPage() {
           <span>AI類題生成</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-bold mb-4 text-balance">AIで類題を自動生成</h1>
-        {professor && (
-          <div className="flex items-center justify-center gap-3 text-muted-foreground text-sm md:text-base">
-            <span className="font-semibold text-foreground">{professor.name}</span>
-            <span>・</span>
-            <span>{subject?.name ?? "科目未設定"}</span>
-          </div>
-        )}
+        {/* ヘッダーに教授情報を表示しているため、ここでは省略してシンプルにする */}
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty mb-8">
           過去問をベースに、同じレベルの練習問題を瞬時に作成。あなたの学習をサポートします。
         </p>
@@ -246,50 +241,7 @@ export default function GenerateSimilarQuestionsPage() {
           </Card>
         </div>
 
-        {/* Features Section */}
-        <div className="mt-16 grid md:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Sparkles className="h-6 w-6 text-primary" />
-              </div>
-              <CardTitle className="text-lg">AI自動生成</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                OpenAI GPT-4を使用して、元の問題と同じレベルの類題を瞬時に生成します。
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <BookOpen className="h-6 w-6 text-primary" />
-              </div>
-              <CardTitle className="text-lg">学習効率UP</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                繰り返し練習することで、問題パターンを理解し、試験対策を効率化できます。
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <ArrowRight className="h-6 w-6 text-primary" />
-              </div>
-              <CardTitle className="text-lg">簡単操作</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                問題を入力してボタンを押すだけ。誰でも簡単に類題を生成できます。
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Features を削除して画面をシンプルにする */}
       </section>
     </div>
   )
