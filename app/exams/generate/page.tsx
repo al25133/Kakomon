@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, Sparkles, ChevronLeft, ArrowRight, BookOpen } from "lucide-react"
+import { Loader2, Sparkles, ArrowRight, BookOpen } from "lucide-react"
+import { HeaderBackButton } from "@/components/ui/header-back-button"
 import { toast } from "sonner"
 import { useRouter, useSearchParams } from "next/navigation"
 import { getMockProfessorById, getMockSubjectById } from "@/lib/mock-data"
@@ -78,14 +79,8 @@ export default function GenerateSimilarQuestionsPage() {
     <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div>
-          {/* 戻るボタンは教授が選択されている場合はその教授のビューへ、それ以外は学部一覧へ */}
-          <a
-            href={hasProfessor ? `/exams/view?professor=${professorId}` : `/study/faculties`}
-            className="inline-flex items-center justify-center h-10 w-10 rounded-md text-foreground hover:bg-muted/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          >
-            <ChevronLeft className="h-5 w-5" />
-            <span className="sr-only">戻る</span>
-          </a>
+          {/* 戻るボタンは教授が選択されている場合はその教授のビューへ、それ以外はホームへ */}
+          <HeaderBackButton href={hasProfessor ? `/exams/view?professor=${professorId}` : `/home`} />
         </div>
 
         <div className="text-center absolute left-1/2 -translate-x-1/2">
