@@ -17,10 +17,14 @@ const HeaderBackButton = React.forwardRef<HTMLElement, HeaderBackButtonProps>(
     )
 
     if (href) {
-      const resolvedHref = href.startsWith("/") ? `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${href}` : href
-
       return (
-        <Link href={resolvedHref} onClick={onClick} className={classes} ref={ref as React.Ref<HTMLAnchorElement>} {...props}>
+        <Link
+          href={href}
+          onClick={onClick}
+          className={classes}
+          ref={ref as React.Ref<HTMLAnchorElement>}
+          {...props}
+        >
           <ChevronLeft className="h-6 w-6" />
           <span className="sr-only">{children || "戻る"}</span>
         </Link>

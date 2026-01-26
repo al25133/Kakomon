@@ -68,7 +68,7 @@ export default function LoginPage() {
       {/* PDFデザインのヘッダー (戻るボタン付き) */}
       <header className="bg-background text-foreground shadow-md sticky top-0 z-10">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <HeaderBackButton href="/">
+          <HeaderBackButton href="/home">
             <ChevronLeft className="h-6 w-6" />
             <span className="sr-only">戻る</span>
           </HeaderBackButton>

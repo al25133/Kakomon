@@ -48,15 +48,17 @@ const Button = React.forwardRef<any, ButtonProps>(
     const mergedStyle = { marginTop: "1.5rem", ...(style as React.CSSProperties) }
 
     if (href) {
-        const resolvedHref = href.startsWith("/")
-          ? `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${href}`
-          : href
-
-        return (
-          <Link href={resolvedHref} className={classes} ref={ref} style={mergedStyle} {...(props as any)}>
-            {children}
-          </Link>
-        )
+      return (
+        <Link
+          href={href}
+          className={classes}
+          ref={ref}
+          style={mergedStyle}
+          {...(props as any)}
+        >
+          {children}
+        </Link>
+      )
     }
 
     const Comp = asChild ? Slot : "button"
